@@ -1,0 +1,21 @@
+# Query 9: List students, courses, sections and department offerings
+# Joins Student -> Enrollment -> Section -> Course -> Department
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?studentName ?courseCode ?courseTitle ?sectionNumber ?departmentName ?letterGrade
+WHERE {
+    ?enrollment a unigraph:Enrollment ;
+                unigraph:enrollmentStudent ?student ;
+                unigraph:enrollmentSection ?section .
+    ?student foaf:name ?studentName .
+    ?section unigraph:sectionOfCourse ?course ;
+             unigraph:sectionNumber ?sectionNumber .
+    ?course unigraph:code ?courseCode ;
+            rdfs:label ?courseTitle ;
+            unigraph:courseOfDepartment ?department .
+    ?department foaf:name ?departmentName .
+    OPTIONAL { ?enrollment unigraph:letterGrade ?letterGrade }
+}
+ORDER BY ?studentName ?courseCode

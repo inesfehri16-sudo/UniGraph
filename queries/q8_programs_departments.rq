@@ -1,0 +1,17 @@
+# Query 8: List academic programs and their offering departments
+# Displays program URI, program name, degree level, credits required, and department name
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?program ?programName ?degreeLevel ?creditsRequired ?departmentName ?departmentCode
+WHERE {
+    ?program a unigraph:Program ;
+             rdfs:label ?programName ;
+             unigraph:programOfDepartment ?department .
+    OPTIONAL { ?program unigraph:degreeLevel ?degreeLevel }
+    OPTIONAL { ?program unigraph:creditsRequired ?creditsRequired }
+    OPTIONAL { ?department foaf:name ?departmentName }
+    OPTIONAL { ?department unigraph:code ?departmentCode }
+}
+ORDER BY ?departmentName ?programName

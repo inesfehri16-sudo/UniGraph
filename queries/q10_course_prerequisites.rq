@@ -1,0 +1,15 @@
+# Query 10: List courses and their prerequisite courses
+# Displays course code, title, and prerequisite course code and title
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?courseCode ?courseTitle ?prerequisiteCode ?prerequisiteTitle
+WHERE {
+    ?course a unigraph:Course ;
+            unigraph:code ?courseCode ;
+            rdfs:label ?courseTitle ;
+            unigraph:hasPrerequisite ?prereq .
+    ?prereq unigraph:code ?prerequisiteCode ;
+            rdfs:label ?prerequisiteTitle .
+}
+ORDER BY ?courseCode ?prerequisiteCode
