@@ -7017,8 +7017,8 @@ unigraph:Student a rdfs:Class ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/3> ;
     unigraph:rank "assistant_professor" ;
     unigraph:salary 94169.03 ;
-    unigraph:sourceId "4"^^xsd:string,
-        "person_36"^^xsd:string .
+    unigraph:sourceId "4"^^xsd:string ;
+    unigraph:sourcePersonId "36"^^xsd:string .
 
 <https://unigraph.org/data/room/10> a unigraph:Room ;
     rdfs:label "Room 4" ;
@@ -8271,6 +8271,12 @@ unigraph:gradePoints a rdf:Property ;
     rdfs:domain unigraph:Enrollment ;
     rdfs:range xsd:decimal .
 
+unigraph:hasOfficeRoom a rdf:Property ;
+    rdfs:label "hasOfficeRoom"@en ;
+    rdfs:comment "The office room allocated to an academic department."@en ;
+    rdfs:domain unigraph:Department ;
+    rdfs:range unigraph:Room .
+
 unigraph:hasPrerequisite a rdf:Property ;
     rdfs:label "hasPrerequisite"@en ;
     rdfs:comment "Prerequisite course required before taking this course."@en ;
@@ -8313,6 +8319,12 @@ unigraph:offersProgram a rdf:Property ;
     rdfs:domain unigraph:Department ;
     rdfs:range unigraph:Program .
 
+unigraph:programOfDepartment a rdf:Property ;
+    rdfs:label "programOfDepartment"@en ;
+    rdfs:comment "The academic department that administers this program."@en ;
+    rdfs:domain unigraph:Program ;
+    rdfs:range unigraph:Department .
+
 unigraph:rank a rdf:Property ;
     rdfs:label "rank"@en ;
     rdfs:comment "Academic faculty rank (e.g. professor, assistant_professor)."@en ;
@@ -8347,6 +8359,12 @@ unigraph:sourceId a rdf:Property ;
     rdfs:label "sourceId"@en ;
     rdfs:comment "Traceability identifier preserved from the original CSV dataset."@en ;
     rdfs:domain rdfs:Resource ;
+    rdfs:range xsd:string .
+
+unigraph:sourcePersonId a rdf:Property ;
+    rdfs:label "sourcePersonId"@en ;
+    rdfs:comment "Traceability identifier of person record from people.csv."@en ;
+    rdfs:domain unigraph:Person ;
     rdfs:range xsd:string .
 
 unigraph:startDate a rdf:Property ;
@@ -11822,111 +11840,111 @@ unigraph:year a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/9> ;
     unigraph:rank "assistant_professor" ;
     unigraph:salary 109284.68 ;
-    unigraph:sourceId "3"^^xsd:string,
-        "person_9"^^xsd:string .
+    unigraph:sourceId "3"^^xsd:string ;
+    unigraph:sourcePersonId "9"^^xsd:string .
 
 <https://unigraph.org/data/program/13> a unigraph:Program ;
     rdfs:label "International Management Computational Theory" ;
     foaf:name "International Management Computational Theory" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:sourceId "13"^^xsd:string .
 
 <https://unigraph.org/data/program/14> a unigraph:Program ;
     rdfs:label "Research Management" ;
     foaf:name "Research Management" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:sourceId "14"^^xsd:string .
 
 <https://unigraph.org/data/program/15> a unigraph:Program ;
     rdfs:label "Design Computational Management Applied" ;
     foaf:name "Design Computational Management Applied" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "15"^^xsd:string .
 
 <https://unigraph.org/data/program/16> a unigraph:Program ;
     rdfs:label "Engineering Modern" ;
     foaf:name "Engineering Modern" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/8> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/8> ;
     unigraph:sourceId "16"^^xsd:string .
 
 <https://unigraph.org/data/program/17> a unigraph:Program ;
     rdfs:label "Computational Finance Policy Data" ;
     foaf:name "Computational Finance Policy Data" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "certificate" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "17"^^xsd:string .
 
 <https://unigraph.org/data/program/18> a unigraph:Program ;
     rdfs:label "Science Systems Finance Studies" ;
     foaf:name "Science Systems Finance Studies" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "certificate" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:sourceId "18"^^xsd:string .
 
 <https://unigraph.org/data/program/27> a unigraph:Program ;
     rdfs:label "International Finance Modern" ;
     foaf:name "International Finance Modern" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "27"^^xsd:string .
 
 <https://unigraph.org/data/program/28> a unigraph:Program ;
     rdfs:label "International Research" ;
     foaf:name "International Research" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/6> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/6> ;
     unigraph:sourceId "28"^^xsd:string .
 
 <https://unigraph.org/data/program/31> a unigraph:Program ;
     rdfs:label "International Health" ;
     foaf:name "International Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:sourceId "31"^^xsd:string .
 
 <https://unigraph.org/data/program/35> a unigraph:Program ;
     rdfs:label "Environmental Computational Health" ;
     foaf:name "Environmental Computational Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:sourceId "35"^^xsd:string .
 
 <https://unigraph.org/data/program/36> a unigraph:Program ;
     rdfs:label "Research Finance" ;
     foaf:name "Research Finance" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/6> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/6> ;
     unigraph:sourceId "36"^^xsd:string .
 
 <https://unigraph.org/data/program/37> a unigraph:Program ;
     rdfs:label "Systems Policy Environmental" ;
     foaf:name "Systems Policy Environmental" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "37"^^xsd:string .
 
 <https://unigraph.org/data/program/5> a unigraph:Program ;
     rdfs:label "Research Systems" ;
     foaf:name "Research Systems" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/7> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/7> ;
     unigraph:sourceId "5"^^xsd:string .
 
 <https://unigraph.org/data/room/11> a unigraph:Room ;
@@ -13876,8 +13894,8 @@ unigraph:supervises a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/5> ;
     unigraph:rank "professor" ;
     unigraph:salary 81843.98 ;
-    unigraph:sourceId "7"^^xsd:string,
-        "person_21"^^xsd:string .
+    unigraph:sourceId "7"^^xsd:string ;
+    unigraph:sourcePersonId "21"^^xsd:string .
 
 <https://unigraph.org/data/instructor/9> a unigraph:Professor ;
     rdfs:label "Shanelle Beier" ;
@@ -13890,119 +13908,119 @@ unigraph:supervises a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/1> ;
     unigraph:rank "associate_professor" ;
     unigraph:salary 128236.11 ;
-    unigraph:sourceId "9"^^xsd:string,
-        "person_30"^^xsd:string .
+    unigraph:sourceId "9"^^xsd:string ;
+    unigraph:sourcePersonId "30"^^xsd:string .
 
 <https://unigraph.org/data/program/11> a unigraph:Program ;
     rdfs:label "Management Theory Science" ;
     foaf:name "Management Theory Science" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "certificate" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:sourceId "11"^^xsd:string .
 
 <https://unigraph.org/data/program/12> a unigraph:Program ;
     rdfs:label "Practice Research Science" ;
     foaf:name "Practice Research Science" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:sourceId "12"^^xsd:string .
 
 <https://unigraph.org/data/program/20> a unigraph:Program ;
     rdfs:label "Finance Design Literature Data" ;
     foaf:name "Finance Design Literature Data" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/2> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/2> ;
     unigraph:sourceId "20"^^xsd:string .
 
 <https://unigraph.org/data/program/21> a unigraph:Program ;
     rdfs:label "Science Engineering" ;
     foaf:name "Science Engineering" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "21"^^xsd:string .
 
 <https://unigraph.org/data/program/22> a unigraph:Program ;
     rdfs:label "Design Applied Management" ;
     foaf:name "Design Applied Management" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:sourceId "22"^^xsd:string .
 
 <https://unigraph.org/data/program/23> a unigraph:Program ;
     rdfs:label "Studies Management Literature Health" ;
     foaf:name "Studies Management Literature Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:sourceId "23"^^xsd:string .
 
 <https://unigraph.org/data/program/24> a unigraph:Program ;
     rdfs:label "Data Modern Studies" ;
     foaf:name "Data Modern Studies" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:sourceId "24"^^xsd:string .
 
 <https://unigraph.org/data/program/29> a unigraph:Program ;
     rdfs:label "Data Practice Theory" ;
     foaf:name "Data Practice Theory" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/8> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/8> ;
     unigraph:sourceId "29"^^xsd:string .
 
 <https://unigraph.org/data/program/30> a unigraph:Program ;
     rdfs:label "Environmental Computational" ;
     foaf:name "Environmental Computational" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "30"^^xsd:string .
 
 <https://unigraph.org/data/program/34> a unigraph:Program ;
     rdfs:label "Science Research Health" ;
     foaf:name "Science Research Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "34"^^xsd:string .
 
 <https://unigraph.org/data/program/38> a unigraph:Program ;
     rdfs:label "Policy Science Literature" ;
     foaf:name "Policy Science Literature" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "38"^^xsd:string .
 
 <https://unigraph.org/data/program/39> a unigraph:Program ;
     rdfs:label "Studies Policy International" ;
     foaf:name "Studies Policy International" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "39"^^xsd:string .
 
 <https://unigraph.org/data/program/40> a unigraph:Program ;
     rdfs:label "Computational Engineering" ;
     foaf:name "Computational Engineering" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/2> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/2> ;
     unigraph:sourceId "40"^^xsd:string .
 
 <https://unigraph.org/data/program/8> a unigraph:Program ;
     rdfs:label "Management Science" ;
     foaf:name "Management Science" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "certificate" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "8"^^xsd:string .
 
 <https://unigraph.org/data/room/1> a unigraph:Room ;
@@ -14483,57 +14501,57 @@ unigraph:associatedWith a rdf:Property ;
 <https://unigraph.org/data/program/10> a unigraph:Program ;
     rdfs:label "Environmental Health Engineering" ;
     foaf:name "Environmental Health Engineering" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/9> ;
     unigraph:sourceId "10"^^xsd:string .
 
 <https://unigraph.org/data/program/19> a unigraph:Program ;
     rdfs:label "Data Health Finance International" ;
     foaf:name "Data Health Finance International" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:sourceId "19"^^xsd:string .
 
 <https://unigraph.org/data/program/26> a unigraph:Program ;
     rdfs:label "Theory Data Modern" ;
     foaf:name "Theory Data Modern" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/5> ;
     unigraph:sourceId "26"^^xsd:string .
 
 <https://unigraph.org/data/program/33> a unigraph:Program ;
     rdfs:label "Management Modern Finance Systems" ;
     foaf:name "Management Modern Finance Systems" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "33"^^xsd:string .
 
 <https://unigraph.org/data/program/6> a unigraph:Program ;
     rdfs:label "Systems Data" ;
     foaf:name "Systems Data" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:sourceId "6"^^xsd:string .
 
 <https://unigraph.org/data/program/7> a unigraph:Program ;
     rdfs:label "International Research Science Studies" ;
     foaf:name "International Research Science Studies" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "7"^^xsd:string .
 
 <https://unigraph.org/data/program/9> a unigraph:Program ;
     rdfs:label "Research Literature Design Health" ;
     foaf:name "Research Literature Design Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:sourceId "9"^^xsd:string .
 
 <https://unigraph.org/data/semester/2> a unigraph:Semester ;
@@ -14681,8 +14699,8 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/5> ;
     unigraph:rank "professor" ;
     unigraph:salary 64114.37 ;
-    unigraph:sourceId "2"^^xsd:string,
-        "person_32"^^xsd:string .
+    unigraph:sourceId "2"^^xsd:string ;
+    unigraph:sourcePersonId "32"^^xsd:string .
 
 <https://unigraph.org/data/instructor/6> a unigraph:Professor ;
     rdfs:label "Destiny Lubowitz-Smitham" ;
@@ -14697,39 +14715,39 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/2> ;
     unigraph:rank "associate_professor" ;
     unigraph:salary 179226.2 ;
-    unigraph:sourceId "6"^^xsd:string,
-        "person_27"^^xsd:string .
+    unigraph:sourceId "6"^^xsd:string ;
+    unigraph:sourcePersonId "27"^^xsd:string .
 
 <https://unigraph.org/data/program/2> a unigraph:Program ;
     rdfs:label "Environmental Finance" ;
     foaf:name "Environmental Finance" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "doctorate" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/4> ;
     unigraph:sourceId "2"^^xsd:string .
 
 <https://unigraph.org/data/program/25> a unigraph:Program ;
     rdfs:label "Applied Literature Engineering" ;
     foaf:name "Applied Literature Engineering" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:creditsRequired 60 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/10> ;
     unigraph:sourceId "25"^^xsd:string .
 
 <https://unigraph.org/data/program/3> a unigraph:Program ;
     rdfs:label "Research Analytics Design Practice" ;
     foaf:name "Research Analytics Design Practice" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 30 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "3"^^xsd:string .
 
 <https://unigraph.org/data/program/32> a unigraph:Program ;
     rdfs:label "Science Analytics" ;
     foaf:name "Science Analytics" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "bachelor" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "32"^^xsd:string .
 
 <https://unigraph.org/data/semester/10> a unigraph:Semester ;
@@ -14773,15 +14791,15 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/1> ;
     unigraph:rank "lecturer" ;
     unigraph:salary 171437.85 ;
-    unigraph:sourceId "10"^^xsd:string,
-        "person_33"^^xsd:string .
+    unigraph:sourceId "10"^^xsd:string ;
+    unigraph:sourcePersonId "33"^^xsd:string .
 
 <https://unigraph.org/data/program/4> a unigraph:Program ;
     rdfs:label "Literature Engineering" ;
     foaf:name "Literature Engineering" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/1> ;
     unigraph:sourceId "4"^^xsd:string .
 
 <https://unigraph.org/data/semester/6> a unigraph:Semester ;
@@ -14815,8 +14833,8 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/5> ;
     unigraph:rank "lecturer" ;
     unigraph:salary 173714.28 ;
-    unigraph:sourceId "5"^^xsd:string,
-        "person_13"^^xsd:string .
+    unigraph:sourceId "5"^^xsd:string ;
+    unigraph:sourcePersonId "13"^^xsd:string .
 
 <https://unigraph.org/data/instructor/8> a unigraph:Professor ;
     rdfs:label "Alexandra Hessel" ;
@@ -14830,8 +14848,8 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/8> ;
     unigraph:rank "professor" ;
     unigraph:salary 96222.38 ;
-    unigraph:sourceId "8"^^xsd:string,
-        "person_38"^^xsd:string .
+    unigraph:sourceId "8"^^xsd:string ;
+    unigraph:sourcePersonId "38"^^xsd:string .
 
 <https://unigraph.org/data/course/30> a unigraph:Course ;
     rdfs:label "Advanced In Theory Foundations" ;
@@ -14856,9 +14874,9 @@ unigraph:associatedWith a rdf:Property ;
 <https://unigraph.org/data/program/1> a unigraph:Program ;
     rdfs:label "Design Finance Practice Health" ;
     foaf:name "Design Finance Practice Health" ;
-    unigraph:courseOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:creditsRequired 120 ;
     unigraph:degreeLevel "master" ;
+    unigraph:programOfDepartment <https://unigraph.org/data/department/3> ;
     unigraph:sourceId "1"^^xsd:string .
 
 <https://unigraph.org/data/course/2> a unigraph:Course ;
@@ -14904,8 +14922,8 @@ unigraph:associatedWith a rdf:Property ;
     unigraph:belongsToDepartment <https://unigraph.org/data/department/5> ;
     unigraph:rank "assistant_professor" ;
     unigraph:salary 96928.75 ;
-    unigraph:sourceId "1"^^xsd:string,
-        "person_47"^^xsd:string .
+    unigraph:sourceId "1"^^xsd:string ;
+    unigraph:sourcePersonId "47"^^xsd:string .
 
 <https://unigraph.org/data/building/11> a unigraph:Building ;
     rdfs:label "Arts Center" ;
@@ -14943,8 +14961,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/31>,
         <https://unigraph.org/data/section/34>,
         <https://unigraph.org/data/section/7> ;
-    unigraph:sourceId "30"^^xsd:string,
-        "person_13"^^xsd:string ;
+    unigraph:sourceId "30"^^xsd:string ;
+    unigraph:sourcePersonId "13"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/33> a unigraph:Student ;
@@ -14965,8 +14983,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/29>,
         <https://unigraph.org/data/section/4>,
         <https://unigraph.org/data/section/5> ;
-    unigraph:sourceId "33"^^xsd:string,
-        "person_31"^^xsd:string ;
+    unigraph:sourceId "33"^^xsd:string ;
+    unigraph:sourcePersonId "31"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/15> a unigraph:Student ;
@@ -14988,8 +15006,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/4>,
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6> ;
-    unigraph:sourceId "15"^^xsd:string,
-        "person_43"^^xsd:string ;
+    unigraph:sourceId "15"^^xsd:string ;
+    unigraph:sourcePersonId "43"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/building/12> a unigraph:Building ;
@@ -15027,8 +15045,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/38>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "13"^^xsd:string,
-        "person_7"^^xsd:string ;
+    unigraph:sourceId "13"^^xsd:string ;
+    unigraph:sourcePersonId "7"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/2> a unigraph:Student ;
@@ -15051,8 +15069,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "2"^^xsd:string,
-        "person_27"^^xsd:string ;
+    unigraph:sourceId "2"^^xsd:string ;
+    unigraph:sourcePersonId "27"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/building/9> a unigraph:Building ;
@@ -15081,8 +15099,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/4>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "25"^^xsd:string,
-        "person_26"^^xsd:string ;
+    unigraph:sourceId "25"^^xsd:string ;
+    unigraph:sourcePersonId "26"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/41> a unigraph:Student ;
@@ -15106,8 +15124,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "41"^^xsd:string,
-        "person_21"^^xsd:string ;
+    unigraph:sourceId "41"^^xsd:string ;
+    unigraph:sourcePersonId "21"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/9> a unigraph:Student ;
@@ -15131,8 +15149,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/37>,
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "9"^^xsd:string,
-        "person_48"^^xsd:string ;
+    unigraph:sourceId "9"^^xsd:string ;
+    unigraph:sourcePersonId "48"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/building/4> a unigraph:Building ;
@@ -15162,8 +15180,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/32>,
         <https://unigraph.org/data/section/35>,
         <https://unigraph.org/data/section/7> ;
-    unigraph:sourceId "23"^^xsd:string,
-        "person_54"^^xsd:string ;
+    unigraph:sourceId "23"^^xsd:string ;
+    unigraph:sourcePersonId "54"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/39> a unigraph:Student ;
@@ -15188,8 +15206,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/34>,
         <https://unigraph.org/data/section/38>,
         <https://unigraph.org/data/section/5> ;
-    unigraph:sourceId "39"^^xsd:string,
-        "person_55"^^xsd:string ;
+    unigraph:sourceId "39"^^xsd:string ;
+    unigraph:sourcePersonId "55"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/49> a unigraph:Student ;
@@ -15214,8 +15232,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/40>,
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6> ;
-    unigraph:sourceId "49"^^xsd:string,
-        "person_5"^^xsd:string ;
+    unigraph:sourceId "49"^^xsd:string ;
+    unigraph:sourcePersonId "5"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/building/6> a unigraph:Building ;
@@ -15247,8 +15265,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "32"^^xsd:string,
-        "person_36"^^xsd:string ;
+    unigraph:sourceId "32"^^xsd:string ;
+    unigraph:sourcePersonId "36"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/40> a unigraph:Student ;
@@ -15275,8 +15293,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "40"^^xsd:string,
-        "person_6"^^xsd:string ;
+    unigraph:sourceId "40"^^xsd:string ;
+    unigraph:sourcePersonId "6"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/43> a unigraph:Student ;
@@ -15303,8 +15321,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "43"^^xsd:string,
-        "person_40"^^xsd:string ;
+    unigraph:sourceId "43"^^xsd:string ;
+    unigraph:sourcePersonId "40"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/course/1> a unigraph:Course ;
@@ -15349,8 +15367,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "12"^^xsd:string,
-        "person_11"^^xsd:string ;
+    unigraph:sourceId "12"^^xsd:string ;
+    unigraph:sourcePersonId "11"^^xsd:string ;
     unigraph:status "on_leave" .
 
 <https://unigraph.org/data/student/3> a unigraph:Student ;
@@ -15378,8 +15396,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "3"^^xsd:string,
-        "person_30"^^xsd:string ;
+    unigraph:sourceId "3"^^xsd:string ;
+    unigraph:sourcePersonId "30"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/36> a unigraph:Student ;
@@ -15407,8 +15425,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "36"^^xsd:string,
-        "person_51"^^xsd:string ;
+    unigraph:sourceId "36"^^xsd:string ;
+    unigraph:sourcePersonId "51"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/50> a unigraph:Student ;
@@ -15436,8 +15454,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "50"^^xsd:string,
-        "person_41"^^xsd:string ;
+    unigraph:sourceId "50"^^xsd:string ;
+    unigraph:sourcePersonId "41"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/7> a unigraph:Student ;
@@ -15465,8 +15483,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "7"^^xsd:string,
-        "person_19"^^xsd:string ;
+    unigraph:sourceId "7"^^xsd:string ;
+    unigraph:sourcePersonId "19"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/building/3> a unigraph:Building ;
@@ -15500,8 +15518,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "1"^^xsd:string,
-        "person_44"^^xsd:string ;
+    unigraph:sourceId "1"^^xsd:string ;
+    unigraph:sourcePersonId "44"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/14> a unigraph:Student ;
@@ -15530,8 +15548,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/40>,
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "14"^^xsd:string,
-        "person_8"^^xsd:string ;
+    unigraph:sourceId "14"^^xsd:string ;
+    unigraph:sourcePersonId "8"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/27> a unigraph:Student ;
@@ -15560,8 +15578,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/36>,
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "27"^^xsd:string,
-        "person_38"^^xsd:string ;
+    unigraph:sourceId "27"^^xsd:string ;
+    unigraph:sourcePersonId "38"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/35> a unigraph:Student ;
@@ -15590,8 +15608,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/39>,
         <https://unigraph.org/data/section/4>,
         <https://unigraph.org/data/section/5> ;
-    unigraph:sourceId "35"^^xsd:string,
-        "person_2"^^xsd:string ;
+    unigraph:sourceId "35"^^xsd:string ;
+    unigraph:sourcePersonId "2"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/38> a unigraph:Student ;
@@ -15621,8 +15639,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "38"^^xsd:string,
-        "person_1"^^xsd:string ;
+    unigraph:sourceId "38"^^xsd:string ;
+    unigraph:sourcePersonId "1"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/18> a unigraph:Student ;
@@ -15653,8 +15671,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/40>,
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6> ;
-    unigraph:sourceId "18"^^xsd:string,
-        "person_35"^^xsd:string ;
+    unigraph:sourceId "18"^^xsd:string ;
+    unigraph:sourcePersonId "35"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/19> a unigraph:Student ;
@@ -15685,8 +15703,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "19"^^xsd:string,
-        "person_17"^^xsd:string ;
+    unigraph:sourceId "19"^^xsd:string ;
+    unigraph:sourcePersonId "17"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/21> a unigraph:Student ;
@@ -15717,8 +15735,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7> ;
-    unigraph:sourceId "21"^^xsd:string,
-        "person_42"^^xsd:string ;
+    unigraph:sourceId "21"^^xsd:string ;
+    unigraph:sourcePersonId "42"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/37> a unigraph:Student ;
@@ -15749,8 +15767,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "37"^^xsd:string,
-        "person_39"^^xsd:string ;
+    unigraph:sourceId "37"^^xsd:string ;
+    unigraph:sourcePersonId "39"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/45> a unigraph:Student ;
@@ -15781,8 +15799,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "45"^^xsd:string,
-        "person_25"^^xsd:string ;
+    unigraph:sourceId "45"^^xsd:string ;
+    unigraph:sourcePersonId "25"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/5> a unigraph:Student ;
@@ -15813,8 +15831,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "5"^^xsd:string,
-        "person_16"^^xsd:string ;
+    unigraph:sourceId "5"^^xsd:string ;
+    unigraph:sourcePersonId "16"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/6> a unigraph:Student ;
@@ -15845,8 +15863,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "6"^^xsd:string,
-        "person_23"^^xsd:string ;
+    unigraph:sourceId "6"^^xsd:string ;
+    unigraph:sourcePersonId "23"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/department/11> a unigraph:Department ;
@@ -15854,7 +15872,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Mathematics" ;
     unigraph:budget 1532780.02 ;
     unigraph:code "XFAD"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/20> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/20> ;
     unigraph:offersCourse <https://unigraph.org/data/course/132>,
         <https://unigraph.org/data/course/156>,
         <https://unigraph.org/data/course/166>,
@@ -15885,7 +15903,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "History" ;
     unigraph:budget 7988907.83 ;
     unigraph:code "PGAT"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/48> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/48> ;
     unigraph:offersCourse <https://unigraph.org/data/course/121>,
         <https://unigraph.org/data/course/148>,
         <https://unigraph.org/data/course/162>,
@@ -15940,8 +15958,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "10"^^xsd:string,
-        "person_20"^^xsd:string ;
+    unigraph:sourceId "10"^^xsd:string ;
+    unigraph:sourcePersonId "20"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/11> a unigraph:Student ;
@@ -15973,8 +15991,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "11"^^xsd:string,
-        "person_9"^^xsd:string ;
+    unigraph:sourceId "11"^^xsd:string ;
+    unigraph:sourcePersonId "9"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/24> a unigraph:Student ;
@@ -16006,8 +16024,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "24"^^xsd:string,
-        "person_28"^^xsd:string ;
+    unigraph:sourceId "24"^^xsd:string ;
+    unigraph:sourcePersonId "28"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/29> a unigraph:Student ;
@@ -16039,8 +16057,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "29"^^xsd:string,
-        "person_24"^^xsd:string ;
+    unigraph:sourceId "29"^^xsd:string ;
+    unigraph:sourcePersonId "24"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/46> a unigraph:Student ;
@@ -16072,8 +16090,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "46"^^xsd:string,
-        "person_12"^^xsd:string ;
+    unigraph:sourceId "46"^^xsd:string ;
+    unigraph:sourcePersonId "12"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/department/14> a unigraph:Department ;
@@ -16081,7 +16099,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Physics" ;
     unigraph:budget 5726429.37 ;
     unigraph:code "QEVT"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/77> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/77> ;
     unigraph:offersCourse <https://unigraph.org/data/course/1>,
         <https://unigraph.org/data/course/113>,
         <https://unigraph.org/data/course/158>,
@@ -16138,8 +16156,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "16"^^xsd:string,
-        "person_3"^^xsd:string ;
+    unigraph:sourceId "16"^^xsd:string ;
+    unigraph:sourcePersonId "3"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/26> a unigraph:Student ;
@@ -16172,8 +16190,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "26"^^xsd:string,
-        "person_14"^^xsd:string ;
+    unigraph:sourceId "26"^^xsd:string ;
+    unigraph:sourcePersonId "14"^^xsd:string ;
     unigraph:status "on_leave" .
 
 <https://unigraph.org/data/student/4> a unigraph:Student ;
@@ -16206,8 +16224,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "4"^^xsd:string,
-        "person_53"^^xsd:string ;
+    unigraph:sourceId "4"^^xsd:string ;
+    unigraph:sourcePersonId "53"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/department/9> a unigraph:Department ;
@@ -16215,7 +16233,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Philosophy" ;
     unigraph:budget 3710395.47 ;
     unigraph:code "NWUD"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/51> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/51> ;
     unigraph:offersCourse <https://unigraph.org/data/course/111>,
         <https://unigraph.org/data/course/142>,
         <https://unigraph.org/data/course/167>,
@@ -16273,8 +16291,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/40>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "31"^^xsd:string,
-        "person_37"^^xsd:string ;
+    unigraph:sourceId "31"^^xsd:string ;
+    unigraph:sourcePersonId "37"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/47> a unigraph:Student ;
@@ -16308,8 +16326,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "47"^^xsd:string,
-        "person_50"^^xsd:string ;
+    unigraph:sourceId "47"^^xsd:string ;
+    unigraph:sourcePersonId "50"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/student/8> a unigraph:Student ;
@@ -16343,8 +16361,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/4>,
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "8"^^xsd:string,
-        "person_22"^^xsd:string ;
+    unigraph:sourceId "8"^^xsd:string ;
+    unigraph:sourcePersonId "22"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/17> a unigraph:Student ;
@@ -16379,8 +16397,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "17"^^xsd:string,
-        "person_49"^^xsd:string ;
+    unigraph:sourceId "17"^^xsd:string ;
+    unigraph:sourcePersonId "49"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/34> a unigraph:Student ;
@@ -16415,8 +16433,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "34"^^xsd:string,
-        "person_52"^^xsd:string ;
+    unigraph:sourceId "34"^^xsd:string ;
+    unigraph:sourcePersonId "52"^^xsd:string ;
     unigraph:status "withdrawn" .
 
 <https://unigraph.org/data/student/44> a unigraph:Student ;
@@ -16451,8 +16469,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "44"^^xsd:string,
-        "person_45"^^xsd:string ;
+    unigraph:sourceId "44"^^xsd:string ;
+    unigraph:sourcePersonId "45"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/building/2> a unigraph:Building ;
@@ -16493,8 +16511,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "42"^^xsd:string,
-        "person_4"^^xsd:string ;
+    unigraph:sourceId "42"^^xsd:string ;
+    unigraph:sourcePersonId "4"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/department/10> a unigraph:Department ;
@@ -16502,7 +16520,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Economics" ;
     unigraph:budget 527187.23 ;
     unigraph:code "WQVY"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/208> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/208> ;
     unigraph:offersCourse <https://unigraph.org/data/course/109>,
         <https://unigraph.org/data/course/112>,
         <https://unigraph.org/data/course/186>,
@@ -16567,8 +16585,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "28"^^xsd:string,
-        "person_29"^^xsd:string ;
+    unigraph:sourceId "28"^^xsd:string ;
+    unigraph:sourcePersonId "29"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/student/20> a unigraph:Student ;
@@ -16606,8 +16624,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "20"^^xsd:string,
-        "person_47"^^xsd:string ;
+    unigraph:sourceId "20"^^xsd:string ;
+    unigraph:sourcePersonId "47"^^xsd:string ;
     unigraph:status "graduated" .
 
 <https://unigraph.org/data/department/7> a unigraph:Department ;
@@ -16615,7 +16633,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Chemistry" ;
     unigraph:budget 2227436.91 ;
     unigraph:code "SHBW"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/18> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/18> ;
     unigraph:offersCourse <https://unigraph.org/data/course/102>,
         <https://unigraph.org/data/course/118>,
         <https://unigraph.org/data/course/161>,
@@ -16694,8 +16712,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/7>,
         <https://unigraph.org/data/section/8>,
         <https://unigraph.org/data/section/9> ;
-    unigraph:sourceId "48"^^xsd:string,
-        "person_15"^^xsd:string ;
+    unigraph:sourceId "48"^^xsd:string ;
+    unigraph:sourcePersonId "15"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/section/39> a unigraph:CourseSection ;
@@ -16713,7 +16731,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Electrical Engineering" ;
     unigraph:budget 502205.18 ;
     unigraph:code "QRGY"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/209> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/209> ;
     unigraph:offersCourse <https://unigraph.org/data/course/108>,
         <https://unigraph.org/data/course/127>,
         <https://unigraph.org/data/course/136>,
@@ -16810,8 +16828,8 @@ unigraph:associatedWith a rdf:Property ;
         <https://unigraph.org/data/section/5>,
         <https://unigraph.org/data/section/6>,
         <https://unigraph.org/data/section/8> ;
-    unigraph:sourceId "22"^^xsd:string,
-        "person_46"^^xsd:string ;
+    unigraph:sourceId "22"^^xsd:string ;
+    unigraph:sourcePersonId "46"^^xsd:string ;
     unigraph:status "enrolled" .
 
 <https://unigraph.org/data/department/8> a unigraph:Department ;
@@ -16819,7 +16837,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "English" ;
     unigraph:budget 2188148.21 ;
     unigraph:code "CDBG"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/76> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/76> ;
     unigraph:offersCourse <https://unigraph.org/data/course/117>,
         <https://unigraph.org/data/course/139>,
         <https://unigraph.org/data/course/143>,
@@ -16921,7 +16939,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Computer Science" ;
     unigraph:budget 3604289.8 ;
     unigraph:code "BGBH"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/153> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/153> ;
     unigraph:offersCourse <https://unigraph.org/data/course/107>,
         <https://unigraph.org/data/course/114>,
         <https://unigraph.org/data/course/147>,
@@ -16968,7 +16986,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Biology" ;
     unigraph:budget 1546842.81 ;
     unigraph:code "CLTK"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/133> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/133> ;
     unigraph:offersCourse <https://unigraph.org/data/course/105>,
         <https://unigraph.org/data/course/134>,
         <https://unigraph.org/data/course/178>,
@@ -17161,7 +17179,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Business" ;
     unigraph:budget 2857544.44 ;
     unigraph:code "HFWA"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/2> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/2> ;
     unigraph:offersCourse <https://unigraph.org/data/course/103>,
         <https://unigraph.org/data/course/12>,
         <https://unigraph.org/data/course/133>,
@@ -17301,7 +17319,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Music" ;
     unigraph:budget 1999565.27 ;
     unigraph:code "HIRD"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/52> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/52> ;
     unigraph:offersCourse <https://unigraph.org/data/course/119>,
         <https://unigraph.org/data/course/125>,
         <https://unigraph.org/data/course/130>,
@@ -17391,7 +17409,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Psychology" ;
     unigraph:budget 6328524.04 ;
     unigraph:code "MTMN"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/156> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/156> ;
     unigraph:offersCourse <https://unigraph.org/data/course/11>,
         <https://unigraph.org/data/course/124>,
         <https://unigraph.org/data/course/128>,
@@ -17519,7 +17537,7 @@ unigraph:associatedWith a rdf:Property ;
     foaf:name "Mechanical Engineering" ;
     unigraph:budget 996884.27 ;
     unigraph:code "SNNA"^^xsd:string ;
-    unigraph:heldInRoom <https://unigraph.org/data/room/32> ;
+    unigraph:hasOfficeRoom <https://unigraph.org/data/room/32> ;
     unigraph:offersCourse <https://unigraph.org/data/course/10>,
         <https://unigraph.org/data/course/100>,
         <https://unigraph.org/data/course/101>,

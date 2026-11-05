@@ -4,7 +4,7 @@ PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?course ?courseCode ?title ?credits ?departmentName
+SELECT DISTINCT ?course ?courseCode ?title ?credits ?departmentName
 WHERE {
     ?course a unigraph:Course ;
             unigraph:code ?courseCode ;

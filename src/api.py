@@ -3,9 +3,9 @@ UniGraph REST API
 Flask-based RESTful service exposing the University Knowledge Graph,
 SPARQL query executor, RDFS inference demonstrations, and ontology metadata.
 """
-from flask import Flask, jsonify, request, render_template, send_from_directory, send_file
+from flask import Flask, jsonify, request, render_template, send_file
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional, Tuple
 from rdflib import Graph
 
 from src.config import (
@@ -22,6 +22,25 @@ from src.config import (
 from src.sparql_service import SPARQLService
 from src.inference import get_inference_demonstrations, run_inference
 from src.ontology import build_ontology
+
+
+def sanitize_input(value: Optional[str]) -> str:
+    """Sanitize filter inputs to prevent SPARQL query string manipulation."""
+    if not value:
+        return ""
+    return str(value).replace('"', '\\"').replace("'", "\\'").strip()
+
+
+def parse_limit(default: int = 50) -> Tuple[Optional[int], Optional[Any], Optional[int]]:
+    """Validates and parses the 'limit' query parameter."""
+    limit_raw = request.args.get("limit", default=default)
+    try:
+        limit = int(limit_raw)
+        if limit <= 0:
+            return None, jsonify({"success": False, "error": "Query parameter 'limit' must be a positive integer."}), 400
+        return limit, None, None
+    except (ValueError, TypeError):
+        return None, jsonify({"success": False, "error": f"Invalid integer value for 'limit': '{limit_raw}'."}), 400
 
 
 def create_app(test_config=None) -> Flask:
@@ -45,7 +64,6 @@ def create_app(test_config=None) -> Flask:
     if INFERRED_GRAPH_FILE.exists():
         inferred_graph.parse(str(INFERRED_GRAPH_FILE), format="turtle")
     else:
-        # Fallback: if inferred graph not yet created, run inference
         inferred_graph, _ = run_inference(raw_graph, save_files=True)
 
     sparql_raw = SPARQLService(graph=raw_graph, use_inferred=False)
@@ -121,9 +139,12 @@ def create_app(test_config=None) -> Flask:
                 {"uri": str(UNIGRAPH.offersCourse), "label": "offersCourse", "domain": "Department", "range": "Course", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.courseOfDepartment), "label": "courseOfDepartment", "domain": "Course", "range": "Department", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.offersProgram), "label": "offersProgram", "domain": "Department", "range": "Program", "subPropertyOf": None},
+                {"uri": str(UNIGRAPH.programOfDepartment), "label": "programOfDepartment", "domain": "Program", "range": "Department", "subPropertyOf": None},
+                {"uri": str(UNIGRAPH.hasOfficeRoom), "label": "hasOfficeRoom", "domain": "Department", "range": "Room", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.sectionOfCourse), "label": "sectionOfCourse", "domain": "CourseSection", "range": "Course", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.taughtBy), "label": "taughtBy", "domain": "CourseSection", "range": "Instructor", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.heldInSemester), "label": "heldInSemester", "domain": "CourseSection", "range": "Semester", "subPropertyOf": None},
+                {"uri": str(UNIGRAPH.heldInRoom), "label": "heldInRoom", "domain": "CourseSection", "range": "Room", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.enrollmentStudent), "label": "enrollmentStudent", "domain": "Enrollment", "range": "Student", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.enrollmentSection), "label": "enrollmentSection", "domain": "Enrollment", "range": "CourseSection", "subPropertyOf": None},
                 {"uri": str(UNIGRAPH.enrolledInSection), "label": "enrolledInSection", "domain": "Student", "range": "CourseSection", "subPropertyOf": "involvedInCourse"},
@@ -148,15 +169,18 @@ def create_app(test_config=None) -> Flask:
     @app.route("/api/students", methods=["GET"])
     def get_students():
         """Lists students with program, advisor, and status. Supports ?status=... and ?limit=..."""
-        status_filter = request.args.get("status")
-        limit = request.args.get("limit", default=50, type=int)
+        limit, err_resp, code = parse_limit(default=50)
+        if err_resp:
+            return err_resp, code
+
+        status_filter = sanitize_input(request.args.get("status"))
 
         query = """
         PREFIX unigraph: <https://unigraph.org/schema#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-        SELECT ?student ?studentName ?email ?programName ?degreeLevel ?status ?advisorName
+        SELECT DISTINCT ?student ?studentName ?email ?programName ?degreeLevel ?status ?advisorName
         WHERE {
             ?student a unigraph:Student ;
                      foaf:name ?studentName ;
@@ -186,15 +210,15 @@ def create_app(test_config=None) -> Flask:
     # 4. Instructors and Departments Endpoint
     @app.route("/api/instructors", methods=["GET"])
     def get_instructors():
-        """Lists instructors with department, rank, and salary."""
-        dept_filter = request.args.get("department")
-        rank_filter = request.args.get("rank")
+        """Lists instructors with department, rank, and salary. Supports ?department=... and ?rank=..."""
+        dept_filter = sanitize_input(request.args.get("department"))
+        rank_filter = sanitize_input(request.args.get("rank"))
 
         query = """
         PREFIX unigraph: <https://unigraph.org/schema#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-        SELECT ?instructor ?instructorName ?email ?rank ?salary ?departmentName ?departmentCode
+        SELECT DISTINCT ?instructor ?instructorName ?email ?rank ?salary ?departmentName ?departmentCode
         WHERE {
             ?instructor unigraph:belongsToDepartment ?department ;
                         foaf:name ?instructorName .
@@ -218,19 +242,85 @@ def create_app(test_config=None) -> Flask:
             return jsonify({"success": False, "error": res["error"]}), 500
         return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
 
-    # 5. Courses and Course Sections Endpoint
+    # 5. Departments Endpoint
+    @app.route("/api/departments", methods=["GET"])
+    def get_departments():
+        """Lists academic departments with budget, office room, and code."""
+        query = """
+        PREFIX unigraph: <https://unigraph.org/schema#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+        SELECT DISTINCT ?department ?name ?code ?budget ?roomNumber
+        WHERE {
+            ?department a unigraph:Department ;
+                        foaf:name ?name .
+            OPTIONAL { ?department unigraph:code ?code }
+            OPTIONAL { ?department unigraph:budget ?budget }
+            OPTIONAL {
+                ?department unigraph:hasOfficeRoom ?room .
+                ?room rdfs:label ?roomNumber .
+            }
+        }
+        ORDER BY ?name
+        """
+        res = sparql_raw.execute_query(query)
+        if not res["success"]:
+            return jsonify({"success": False, "error": res["error"]}), 500
+        return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
+
+    # 6. Academic Programs Endpoint
+    @app.route("/api/programs", methods=["GET"])
+    def get_programs():
+        """Lists academic programs with degree level, credits required, and department."""
+        limit, err_resp, code = parse_limit(default=50)
+        if err_resp:
+            return err_resp, code
+
+        dept_filter = sanitize_input(request.args.get("department"))
+
+        query = """
+        PREFIX unigraph: <https://unigraph.org/schema#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+        SELECT DISTINCT ?program ?name ?degreeLevel ?creditsRequired ?departmentName
+        WHERE {
+            ?program a unigraph:Program ;
+                     rdfs:label ?name ;
+                     unigraph:programOfDepartment ?department .
+            OPTIONAL { ?program unigraph:degreeLevel ?degreeLevel }
+            OPTIONAL { ?program unigraph:creditsRequired ?creditsRequired }
+            OPTIONAL { ?department foaf:name ?departmentName }
+        """
+        if dept_filter:
+            query += f' FILTER(CONTAINS(LCASE(STR(?departmentName)), "{dept_filter.lower()}")) '
+        query += f"""
+        }}
+        ORDER BY ?name
+        LIMIT {limit}
+        """
+        res = sparql_raw.execute_query(query)
+        if not res["success"]:
+            return jsonify({"success": False, "error": res["error"]}), 500
+        return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
+
+    # 7. Courses Endpoint
     @app.route("/api/courses", methods=["GET"])
     def get_courses():
         """Lists courses with offering departments and credits. Supports ?limit=... and ?department=..."""
-        limit = request.args.get("limit", default=50, type=int)
-        dept_filter = request.args.get("department")
+        limit, err_resp, code = parse_limit(default=50)
+        if err_resp:
+            return err_resp, code
+
+        dept_filter = sanitize_input(request.args.get("department"))
 
         query = f"""
         PREFIX unigraph: <https://unigraph.org/schema#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-        SELECT ?course ?courseCode ?title ?credits ?departmentName
+        SELECT DISTINCT ?course ?courseCode ?title ?credits ?departmentName
         WHERE {{
             ?course a unigraph:Course ;
                     unigraph:code ?courseCode ;
@@ -252,7 +342,7 @@ def create_app(test_config=None) -> Flask:
             return jsonify({"success": False, "error": res["error"]}), 500
         return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
 
-    # Course Sections Endpoint
+    # 8. Course Sections Endpoint
     @app.route("/api/sections", methods=["GET"])
     def get_sections():
         """Lists course sections with course, instructor, semester, and room."""
@@ -261,7 +351,7 @@ def create_app(test_config=None) -> Flask:
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-        SELECT ?section ?courseCode ?courseTitle ?sectionNumber ?capacity ?instructorName ?semesterLabel ?roomLabel
+        SELECT DISTINCT ?section ?courseCode ?courseTitle ?sectionNumber ?capacity ?instructorName ?semesterLabel ?roomLabel
         WHERE {
             ?section a unigraph:CourseSection ;
                      unigraph:sectionOfCourse ?course ;
@@ -285,17 +375,20 @@ def create_app(test_config=None) -> Flask:
             return jsonify({"success": False, "error": res["error"]}), 500
         return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
 
-    # Enrollments Endpoint
+    # 9. Enrollments Endpoint
     @app.route("/api/enrollments", methods=["GET"])
     def get_enrollments():
         """Lists student enrollments with grades. Supports ?limit=..."""
-        limit = request.args.get("limit", default=50, type=int)
+        limit, err_resp, code = parse_limit(default=50)
+        if err_resp:
+            return err_resp, code
+
         query = f"""
         PREFIX unigraph: <https://unigraph.org/schema#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-        SELECT ?enrollment ?studentName ?courseCode ?courseTitle ?sectionNumber ?letterGrade ?gradePoints
+        SELECT DISTINCT ?enrollment ?studentName ?courseCode ?courseTitle ?sectionNumber ?letterGrade ?gradePoints
         WHERE {{
             ?enrollment a unigraph:Enrollment ;
                         unigraph:enrollmentStudent ?student ;
@@ -316,7 +409,7 @@ def create_app(test_config=None) -> Flask:
             return jsonify({"success": False, "error": res["error"]}), 500
         return jsonify({"success": True, "count": res["count"], "data": res["results"]}), 200
 
-    # 6. SPARQL Queries Listing & Runner
+    # 10. SPARQL Queries Listing & Runner
     @app.route("/api/sparql/queries", methods=["GET"])
     def list_queries():
         """Returns the list of all available predefined SPARQL queries."""
@@ -334,7 +427,16 @@ def create_app(test_config=None) -> Flask:
                 "use_inferred": true/false (optional, default false)
             }
         """
-        data = request.get_json(silent=True) or {}
+        if not request.is_json:
+            data = request.get_json(silent=True)
+            if data is None:
+                return jsonify({"success": False, "error": "Request body must be valid JSON with Content-Type application/json."}), 400
+        else:
+            data = request.get_json(silent=True)
+
+        if not isinstance(data, dict):
+            return jsonify({"success": False, "error": "Request body must be a JSON object."}), 400
+
         query_str = data.get("query")
         query_id = data.get("query_id")
         use_inferred = bool(data.get("use_inferred", False))
@@ -345,7 +447,7 @@ def create_app(test_config=None) -> Flask:
                 return jsonify({"success": False, "error": f"Predefined query '{query_id}' not found."}), 404
 
         if not query_str or not str(query_str).strip():
-            return jsonify({"success": False, "error": "Query string or valid query_id is required."}), 400
+            return jsonify({"success": False, "error": "A non-empty 'query' string or valid 'query_id' is required."}), 400
 
         service = sparql_inf if use_inferred else sparql_raw
         result = service.execute_query(query_str)
@@ -353,7 +455,7 @@ def create_app(test_config=None) -> Flask:
         status_code = 200 if result["success"] else 400
         return jsonify(result), status_code
 
-    # 7. RDFS Inference Demonstration Endpoint
+    # 11. RDFS Inference Demonstration Endpoint
     @app.route("/api/inference/demo", methods=["GET"])
     def get_inference_demo():
         """Returns detailed before and after metrics and triples for all RDFS inference demonstrations."""
@@ -363,18 +465,19 @@ def create_app(test_config=None) -> Flask:
         except Exception as e:
             return jsonify({"success": False, "error": str(e)}), 500
 
-    # 8. Export Files Endpoint
+    # 12. Export Files Endpoint
     @app.route("/api/export/<target>", methods=["GET"])
     def export_graph(target: str):
         """Allows downloading Turtle RDF files: 'raw', 'inferred', 'ontology', or 'inferred_only'."""
         mapping = {
             "raw": RAW_GRAPH_FILE,
             "inferred": INFERRED_GRAPH_FILE,
+            "inferred_only": DATA_DIR / "inferred_triples.ttl",
             "ontology": ONTOLOGY_DIR / "unigraph_ontology.ttl",
             "diagram": ONTOLOGY_DIR / "ontology_diagram.svg",
         }
         if target not in mapping or not mapping[target].exists():
-            return jsonify({"success": False, "error": f"Target '{target}' not found."}), 404
+            return jsonify({"success": False, "error": f"Export target '{target}' not found."}), 404
         return send_file(mapping[target], as_attachment=False)
 
     # 404 Error handler

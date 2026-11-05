@@ -102,8 +102,10 @@ classDiagram
     Instructor --> Department : belongsToDepartment
     Student --> Program : enrolledInProgram
     Department --> Program : offersProgram
+    Program --> Department : programOfDepartment
     Department --> Course : offersCourse
     Course --> Department : courseOfDepartment
+    Department --> Room : hasOfficeRoom
     Course --> Course : hasPrerequisite
     CourseSection --> Course : sectionOfCourse
     CourseSection --> Instructor : taughtBy

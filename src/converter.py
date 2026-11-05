@@ -53,7 +53,7 @@ def convert_csv_to_rdf(save_to_file: bool = True) -> Graph:
             g.add((dept_uri, UNIGRAPH.budget, Literal(float(row["budget"]), datatype=XSD.decimal)))
         if pd.notna(row.get("office_room_id")):
             room_uri = DATA[f"room/{int(row['office_room_id'])}"]
-            g.add((dept_uri, UNIGRAPH.heldInRoom, room_uri))
+            g.add((dept_uri, UNIGRAPH.hasOfficeRoom, room_uri))
 
     # 3. Programs
     prog_df = load_csv("programs.csv")
@@ -71,7 +71,7 @@ def convert_csv_to_rdf(save_to_file: bool = True) -> Graph:
             g.add((prog_uri, UNIGRAPH.creditsRequired, Literal(int(row["credits_required"]), datatype=XSD.integer)))
         if pd.notna(row.get("department_id")):
             dept_uri = DATA[f"department/{int(row['department_id'])}"]
-            g.add((prog_uri, UNIGRAPH.courseOfDepartment, dept_uri))
+            g.add((prog_uri, UNIGRAPH.programOfDepartment, dept_uri))
             g.add((dept_uri, UNIGRAPH.offersProgram, prog_uri))
 
     # 4. Courses
@@ -178,7 +178,7 @@ def convert_csv_to_rdf(save_to_file: bool = True) -> Graph:
 
         # Person details
         p_id = int(row["person_id"])
-        g.add((inst_uri, UNIGRAPH.sourceId, Literal(f"person_{p_id}", datatype=XSD.string)))
+        g.add((inst_uri, UNIGRAPH.sourcePersonId, Literal(str(p_id), datatype=XSD.string)))
         if p_id in people_df.index:
             p_row = people_df.loc[p_id]
             fn = str(p_row.get("first_name", "")).strip()
@@ -219,7 +219,7 @@ def convert_csv_to_rdf(save_to_file: bool = True) -> Graph:
             g.add((inst_uri, UNIGRAPH.advises, stud_uri))
 
         p_id = int(row["person_id"])
-        g.add((stud_uri, UNIGRAPH.sourceId, Literal(f"person_{p_id}", datatype=XSD.string)))
+        g.add((stud_uri, UNIGRAPH.sourcePersonId, Literal(str(p_id), datatype=XSD.string)))
         if p_id in people_df.index:
             p_row = people_df.loc[p_id]
             fn = str(p_row.get("first_name", "")).strip()

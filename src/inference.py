@@ -2,10 +2,12 @@
 UniGraph RDFS Inference Module
 Performs standard W3C RDFS deductive closure using RDFLib and OWL-RL.
 Separates raw triples from inferred triples and exposes reproducible before/after demonstrations.
+Eliminates spurious duplicate literals across differing XSD datatypes.
 """
 from typing import Dict, Any, Tuple
 from rdflib import Graph, RDF, RDFS, FOAF
 import owlrl
+from owlrl.RDFSClosure import RDFS_Semantics
 
 from src.config import (
     RAW_GRAPH_FILE,
@@ -14,6 +16,18 @@ from src.config import (
     UNIGRAPH,
     bind_prefixes,
 )
+
+
+class CleanRDFS_Semantics(RDFS_Semantics):
+    """
+    Standard W3C RDFS Semantics without pseudo-sameAs literal duplication.
+    Prevents duplicate datatype conversions (e.g., duplicating xsd:integer 1 as xsd:decimal 1.0).
+    """
+    def one_time_rules(self):
+        # By default in owlrl, one_time_rules duplicates literals having identical numerical
+        # values across incompatible datatypes (e.g. integer vs decimal), creating spurious duplicate rows.
+        # Overriding this method preserves true structural RDFS semantics (rdfs2-rdfs12).
+        pass
 
 
 def run_inference(raw_graph: Graph = None, save_files: bool = True) -> Tuple[Graph, Graph]:
@@ -34,7 +48,7 @@ def run_inference(raw_graph: Graph = None, save_files: bool = True) -> Tuple[Gra
         expanded_graph.add(t)
 
     # Perform RDFS deductive closure
-    owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(expanded_graph)
+    owlrl.DeductiveClosure(CleanRDFS_Semantics).expand(expanded_graph)
 
     # Calculate newly inferred triples
     inferred_only_graph = Graph()
@@ -88,6 +102,10 @@ def get_inference_demonstrations(raw_g: Graph = None, exp_g: Graph = None) -> Di
     # Demo 4: Subclass Professor -> Instructor (Rule rdfs9)
     raw_instructors = list(raw_g.triples((None, RDF.type, UNIGRAPH.Instructor)))
     exp_instructors = list(exp_g.triples((None, RDF.type, UNIGRAPH.Instructor)))
+
+    # Validation check: Ensure programs are NOT inferred as courses and departments NOT as sections
+    programs_as_courses = [p for p in exp_g.subjects(RDF.type, UNIGRAPH.Course) if "program/" in str(p)]
+    depts_as_sections = [d for d in exp_g.subjects(RDF.type, UNIGRAPH.CourseSection) if "department/" in str(d)]
 
     demos = {
         "demo1_subproperty_supervises": {
@@ -172,6 +190,11 @@ def get_inference_demonstrations(raw_g: Graph = None, exp_g: Graph = None) -> Di
         "raw_triple_count": len(raw_g),
         "total_inferred_triple_count": len(exp_g),
         "newly_inferred_triples": len(exp_g) - len(raw_g),
+        "semantic_cleanliness_checks": {
+            "programs_falsely_typed_as_courses": len(programs_as_courses),
+            "departments_falsely_typed_as_sections": len(depts_as_sections),
+            "is_semantically_sound": (len(programs_as_courses) == 0 and len(depts_as_sections) == 0)
+        },
         "demonstrations": demos
     }
 
@@ -183,3 +206,4 @@ if __name__ == "__main__":
     demos = get_inference_demonstrations(exp_g=exp_g)
     for k, d in demos["demonstrations"].items():
         print(f"[{d['rule']}] {d['title']}: Before={d['before_count']} -> After={d['after_count']} (Delta: +{d['inferred_count']})")
+    print("Semantic cleanliness checks:", demos["semantic_cleanliness_checks"])

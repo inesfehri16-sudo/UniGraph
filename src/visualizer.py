@@ -121,8 +121,10 @@ def generate_mermaid_diagram() -> str:
     Instructor --> Department : belongsToDepartment
     Student --> Program : enrolledInProgram
     Department --> Program : offersProgram
+    Program --> Department : programOfDepartment
     Department --> Course : offersCourse
     Course --> Department : courseOfDepartment
+    Department --> Room : hasOfficeRoom
     Course --> Course : hasPrerequisite
     CourseSection --> Course : sectionOfCourse
     CourseSection --> Instructor : taughtBy
@@ -175,7 +177,10 @@ def generate_dot_diagram() -> str:
     "unigraph:Instructor" -> "unigraph:Department" [label="unigraph:belongsToDepartment", color="#137333"];
     "unigraph:Student" -> "unigraph:Program" [label="unigraph:enrolledInProgram", color="#137333"];
     "unigraph:Department" -> "unigraph:Course" [label="unigraph:offersCourse", color="#FBBC04"];
+    "unigraph:Course" -> "unigraph:Department" [label="unigraph:courseOfDepartment", color="#FBBC04"];
     "unigraph:Department" -> "unigraph:Program" [label="unigraph:offersProgram", color="#FBBC04"];
+    "unigraph:Program" -> "unigraph:Department" [label="unigraph:programOfDepartment", color="#FBBC04"];
+    "unigraph:Department" -> "unigraph:Room" [label="unigraph:hasOfficeRoom", color="#FBBC04"];
     "unigraph:Course" -> "unigraph:Course" [label="unigraph:hasPrerequisite", color="#EA4335"];
     "unigraph:CourseSection" -> "unigraph:Course" [label="unigraph:sectionOfCourse", color="#EA4335"];
     "unigraph:CourseSection" -> "unigraph:Instructor" [label="unigraph:taughtBy", color="#EA4335"];

@@ -68,3 +68,15 @@ def test_demo4_subclass_instructor(inference_data):
     assert demo["before_count"] == 0
     assert demo["after_count"] == 10
     assert demo["inferred_count"] == 10
+
+
+def test_semantic_cleanliness(inference_data):
+    """
+    Verify that RDFS inference does NOT produce spurious inferences:
+    - Programs must NOT be inferred as Course instances.
+    - Departments must NOT be inferred as CourseSection instances.
+    """
+    clean_checks = inference_data["semantic_cleanliness_checks"]
+    assert clean_checks["programs_falsely_typed_as_courses"] == 0
+    assert clean_checks["departments_falsely_typed_as_sections"] == 0
+    assert clean_checks["is_semantically_sound"] is True

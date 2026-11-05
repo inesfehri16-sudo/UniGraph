@@ -209,6 +209,48 @@ async function loadEnrollments() {
     }
 }
 
+async function loadDepartments() {
+    const tbody = document.querySelector("#departments-table tbody");
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Chargement...</td></tr>';
+    try {
+        const resp = await fetch("/api/departments");
+        const json = await resp.json();
+        if (json.success) {
+            tbody.innerHTML = json.data.map(d => `
+                <tr>
+                    <td class="font-monospace fw-semibold text-primary">${d.departmentCode || '-'}</td>
+                    <td class="fw-semibold">${d.departmentName || '-'}</td>
+                    <td>${d.budget ? Number(d.budget).toLocaleString('fr-FR', {style: 'currency', currency: 'EUR'}) : '-'}</td>
+                    <td>${d.officeRoom || '<span class="text-muted">—</span>'}</td>
+                </tr>
+            `).join("");
+        }
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-danger py-3 text-center">Erreur : ${err.message}</td></tr>`;
+    }
+}
+
+async function loadPrograms() {
+    const tbody = document.querySelector("#programs-table tbody");
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Chargement...</td></tr>';
+    try {
+        const resp = await fetch("/api/programs?limit=50");
+        const json = await resp.json();
+        if (json.success) {
+            tbody.innerHTML = json.data.map(p => `
+                <tr>
+                    <td class="fw-semibold">${p.programName || '-'}</td>
+                    <td><span class="badge bg-primary-subtle text-primary border">${p.degreeLevel || '-'}</span></td>
+                    <td><span class="badge bg-light text-dark border">${p.creditsRequired || '-'} crédits</span></td>
+                    <td>${p.departmentName || '-'}</td>
+                </tr>
+            `).join("");
+        }
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-danger py-3 text-center">Erreur : ${err.message}</td></tr>`;
+    }
+}
+
 // 4. SPARQL Console
 async function loadSavedQueries() {
     try {

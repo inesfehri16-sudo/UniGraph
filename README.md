@@ -3,7 +3,7 @@
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![RDFLib](https://img.shields.io/badge/RDFLib-7.6.0-red.svg)](https://rdflib.readthedocs.io/)
 [![Flask](https://img.shields.io/badge/Flask-3.1.3-black.svg)](https://flask.palletsprojects.com/)
-[![Tests](https://img.shields.io/badge/Tests-35%20passed-success.svg)](#tests-et-validation)
+[![Tests](https://img.shields.io/badge/Tests-49%20passed-success.svg)](#tests-et-validation)
 [![License](https://img.shields.io/badge/Academic-Project-purple.svg)]()
 
 > **Projet Académique de Web Sémantique :** Modélisation ontologique RDF/RDFS, intégration du standard W3C FOAF, conversion relationnelle vers graphe, clôture déductive RDFS formelle, requêtes SPARQL 1.1, API REST Flask et tableau de bord interactif.
@@ -37,7 +37,7 @@ Le projet **UniGraph** a pour vocation de :
 2. **Structurer une ontologie RDFS :** Définir des hiérarchies de classes (`rdfs:subClassOf`), de sous-propriétés (`rdfs:subPropertyOf`), ainsi que des domaines (`rdfs:domain`) et étendues (`rdfs:range`).
 3. **Réutiliser les standards existants :** Intégrer le vocabulaire W3C **FOAF** (*Friend of a Friend*) pour la modélisation des personnes et des organisations.
 4. **Appliquer l'inférence déductive RDFS :** Déduire formellement de nouveaux triplets par clôture déductive (règles `rdfs7`, `rdfs9`, etc.) en fournissant des preuves mathématiques avant/après.
-5. **Restituer et interagir :** Mettre à disposition une batterie de requêtes analytiques **SPARQL 1.1**, une **API REST Flask** complète (10 endpoints JSON) et une **interface web** d'exploration.
+5. **Restituer et interagir :** Mettre à disposition une batterie de requêtes analytiques **SPARQL 1.1**, une **API REST Flask** complète (14 endpoints JSON) et une **interface web** d'exploration.
 
 ### 1.2 Architecture du Système
 
@@ -50,21 +50,21 @@ Le projet **UniGraph** a pour vocation de :
                                                 ▼ [src/converter.py]
 ┌─────────────────────────────────┐   ┌───────────────────────────────────┐
 │     Ontologie RDFS UniGraph     ├──►│        Graphe Brut UniGraph       │
-│   (ontology/unigraph_ontology)  │   │   (data/unigraph.ttl : 15 621 T)  │
+│   (ontology/unigraph_ontology)  │   │   (data/unigraph.ttl : 15 636 T)  │
 └─────────────────────────────────┘   └─────────────────┬─────────────────┘
                                                         │
-                                                        ▼ [src/inference.py (owlrl)]
+                                                        ▼ [src/inference.py (owlrl CleanRDFS)]
                                       ┌───────────────────────────────────┐
                                       │       Graphe RDFS Étendu          │
-                                      │ (data/unigraph_inferred: 25 112 T)│
-                                      │   [+9 491 Nouveaux Triplets]      │
+                                      │ (data/unigraph_inferred: 23 904 T)│
+                                      │   [+8 268 Nouveaux Triplets]      │
                                       └─────────────────┬─────────────────┘
                                                         │
                          ┌──────────────────────────────┴──────────────────────────────┐
                          ▼                                                             ▼
        ┌───────────────────────────────────┐                         ┌───────────────────────────────────┐
        │     Service SPARQL 1.1            │                         │      API REST Flask & Web UI      │
-       │   (queries/*.rq : 7 requêtes)     │                         │   (src/api.py : 10 endpoints)     │
+       │   (queries/*.rq : 10 requêtes)    │                         │   (src/api.py : 14 endpoints)     │
        └───────────────────────────────────┘                         └───────────────────────────────────┘
 ```
 
@@ -74,9 +74,9 @@ Le projet **UniGraph** a pour vocation de :
 UniGraph/
 ├── data/                                 # Fichiers CSV du dataset et graphes RDF générés
 │   ├── departments.csv, courses.csv ...  # 30 fichiers CSV inspectés
-│   ├── unigraph.ttl                      # Graphe RDF brut généré (15 621 triplets)
-│   ├── unigraph_inferred.ttl             # Graphe après clôture déductive RDFS (25 112 triplets)
-│   └── inferred_triples.ttl              # Triplets inférés uniquement (9 491 triplets)
+│   ├── unigraph.ttl                      # Graphe RDF brut généré (15 636 triplets)
+│   ├── unigraph_inferred.ttl             # Graphe après clôture déductive RDFS (23 904 triplets)
+│   └── inferred_triples.ttl              # Triplets inférés uniquement (8 268 triplets)
 ├── ontology/                             # Définition et schémas de l'ontologie
 │   ├── unigraph_ontology.ttl             # Spécification formelle RDFS en Turtle
 │   ├── ontology_diagram.svg              # Schéma conceptuel vectoriel
@@ -84,13 +84,16 @@ UniGraph/
 │   ├── ontology_diagram.dot              # Fichier Graphviz DOT
 │   └── ontology_diagram.mmd              # Fichier Mermaid
 ├── queries/                              # Requêtes SPARQL 1.1 sauvegardées (.rq)
-│   ├── q1_students_programs.rq           # Étudiants et leurs programmes
-│   ├── q2_instructors_departments.rq     # Enseignants et leurs départements
-│   ├── q3_courses_departments.rq         # Catalogue des cours par département
-│   ├── q4_sections_instructors_semesters.rq # Sections, enseignants et semestres
-│   ├── q5_enrollments_students_sections.rq  # Inscriptions et notes obtenues
-│   ├── q6_department_course_counts.rq    # Agrégation : volume de cours par département
-│   └── q7_advisor_advisees.rq            # Conseillers et étudiants supervisés
+│   ├── q1_students_programs.rq           # Étudiants et leurs programmes (50 résultats)
+│   ├── q2_instructors_departments.rq     # Enseignants et leurs départements (10 résultats)
+│   ├── q3_courses_departments.rq         # Catalogue des cours par département (600 résultats)
+│   ├── q4_sections_instructors_semesters.rq # Sections, enseignants et semestres (40 résultats)
+│   ├── q5_enrollments_students_sections.rq  # Inscriptions et notes obtenues (1 000 résultats)
+│   ├── q6_department_course_counts.rq    # Agrégation : volume de cours par département (14 résultats)
+│   ├── q7_advisor_advisees.rq            # Conseillers et étudiants supervisés (50 résultats)
+│   ├── q8_programs_departments.rq        # Programmes et leurs départements (40 résultats)
+│   ├── q9_student_course_enrollments.rq  # Cursus complet : étudiant → section → cours (1 000 résultats)
+│   └── q10_course_prerequisites.rq       # Prérequis de cours (299 résultats)
 ├── src/                                  # Code source Python modulaire
 │   ├── config.py                         # Constantes, chemins et espaces de nommage
 │   ├── ontology.py                       # Modélisation programmatique de l'ontologie
@@ -107,9 +110,9 @@ UniGraph/
 ├── tests/                                # Suite de tests automatisés pytest
 │   ├── test_ontology.py                  # Tests de l'ontologie et axiomes
 │   ├── test_converter.py                 # Tests de la conversion et traçabilité
-│   ├── test_sparql.py                    # Tests d'exécution des 7 requêtes SPARQL
-│   ├── test_inference.py                 # Tests rigoureux des règles d'inférence
-│   └── test_api.py                       # Tests de conformité des 10 endpoints REST
+│   ├── test_sparql.py                    # Tests d'exécution des 10 requêtes SPARQL
+│   ├── test_inference.py                 # Tests rigoureux des règles d'inférence et nettoyage sémantique
+│   └── test_api.py                       # Tests de conformité des 14 endpoints REST
 ├── docs/                                 # Documentation & Soutenance
 │   ├── presentation.md                   # Présentation synthétique en 5 diapositives
 │   ├── presentation.html                 # Diaporama interactif navigable au clavier
@@ -148,7 +151,7 @@ Le jeu de données extrait dans `data/` comprend 30 fichiers CSV réels issus d'
 
 ## 3. Ontologie RDF/RDFS & Réutilisation du Vocabulaire FOAF
 
-L'ontologie est formalisée dans le fichier [`ontology/unigraph_ontology.ttl`](file:///c:/Users/DELL/Desktop/UniGraph/ontology/unigraph_ontology.ttl).
+L'ontologie est formalisée dans le fichier [`ontology/unigraph_ontology.ttl`](ontology/unigraph_ontology.ttl).
 
 ### 3.1 Espaces de Noms (Namespaces)
 * `unigraph:` `<https://unigraph.org/schema#>` (Vocabulaire conceptuel)
@@ -171,7 +174,7 @@ UniGraph réutilise le standard international **FOAF** (*Friend of a Friend*) :
 * Classes universitaires dédiées : `unigraph:Program`, `unigraph:Course`, `unigraph:CourseSection`, `unigraph:Semester`, `unigraph:Enrollment`, `unigraph:Room`, `unigraph:Building`.
 
 ### 3.3 Propriétés, Domaines, Étendues et Sous-propriétés (`rdfs:subPropertyOf`)
-L'ontologie définit 18 propriétés formelles dont :
+L'ontologie définit 19 propriétés formelles dont :
 * `unigraph:associatedWith` : domaine `unigraph:Person`, étendue `rdfs:Resource`.
 * `unigraph:supervises` : `rdfs:subPropertyOf unigraph:associatedWith` (domaine `Instructor`, étendue `Student`).
 * `unigraph:advises` : `rdfs:subPropertyOf unigraph:supervises` (domaine `Instructor`, étendue `Student`).
@@ -180,11 +183,13 @@ L'ontologie définit 18 propriétés formelles dont :
 * `unigraph:enrolledInSection` : `rdfs:subPropertyOf unigraph:involvedInCourse` (domaine `Student`, étendue `CourseSection`).
 * `unigraph:enrolledInProgram` : domaine `Student`, étendue `Program`.
 * `unigraph:offersCourse` & `unigraph:courseOfDepartment` : liens réciproques Department/Course.
+* `unigraph:programOfDepartment` : domaine `Program`, étendue `Department` — lien correct Programme→Département (distinct de `courseOfDepartment`).
+* `unigraph:hasOfficeRoom` : domaine `Department`, étendue `Room` — salle administrative du département (distinct de `heldInRoom` réservé aux sections de cours).
 * `unigraph:sectionOfCourse`, `unigraph:taughtBy`, `unigraph:heldInSemester`, `unigraph:heldInRoom`.
 * Propriétés de typage littéral : `unigraph:code`, `unigraph:credits` (`xsd:integer`), `unigraph:salary` (`xsd:decimal`), `unigraph:letterGrade` (`xsd:string`), `unigraph:gradePoints` (`xsd:decimal`).
 
 ### 3.4 Schéma Graphique de l'Ontologie
-Le schéma graphique est consultable dans [`ontology/ontology_diagram.svg`](file:///c:/Users/DELL/Desktop/UniGraph/ontology/ontology_diagram.svg) et [`ontology/ontology_diagram.png`](file:///c:/Users/DELL/Desktop/UniGraph/ontology/ontology_diagram.png).
+Le schéma graphique est consultable dans [`ontology/ontology_diagram.svg`](ontology/ontology_diagram.svg) et [`ontology/ontology_diagram.png`](ontology/ontology_diagram.png).
 
 Il peut être régénéré à tout moment via la commande :
 ```bash
@@ -195,7 +200,7 @@ python run.py visualize
 
 ## 4. Transformation des Données CSV en RDF
 
-Le module [`src/converter.py`](file:///c:/Users/DELL/Desktop/UniGraph/src/converter.py) assure la projection sémantique des CSV :
+Le module [`src/converter.py`](src/converter.py) assure la projection sémantique des CSV :
 1. **URI Déterministes & Traçables :**
    * Étudiant ID 1 $\rightarrow$ `<https://unigraph.org/data/student/1>`
    * Enseignant ID 2 $\rightarrow$ `<https://unigraph.org/data/instructor/2>`
@@ -206,13 +211,16 @@ Le module [`src/converter.py`](file:///c:/Users/DELL/Desktop/UniGraph/src/conver
 3. **Typage Précis (XSD) :**
    * Les crédits sont typés en `xsd:integer`, les dates en `xsd:date`, les budgets et salaires en `xsd:decimal`. Les valeurs manquantes (`NaN`) sont ignorées pour éviter les triplets vides.
 4. **Volume généré :**
-   * **15 621 triplets** sérialisés dans [`data/unigraph.ttl`](file:///c:/Users/DELL/Desktop/UniGraph/data/unigraph.ttl).
+   * **15 636 triplets** sérialisés dans [`data/unigraph.ttl`](data/unigraph.ttl).
+
+> [!NOTE]
+> La propriété `unigraph:programOfDepartment` (Programme→Département) a été ajoutée après l'audit initial pour remplacer l'usage incorrect de `courseOfDepartment` (domaine: Course) sur des nœuds Programme. De même, `unigraph:hasOfficeRoom` remplace `heldInRoom` sur les nœuds Département. Ces corrections évitent une inférence RDFS erronée qui typisait des Programmes en tant que Cours et des Départements en tant que Sections.
 
 ---
 
 ## 5. Requêtes SPARQL & Exemples de Résultats
 
-Les requêtes sont stockées sous forme de fichiers autonomes dans le dossier [`queries/`](file:///c:/Users/DELL/Desktop/UniGraph/queries/) :
+Les requêtes sont stockées sous forme de fichiers autonomes dans le dossier [`queries/`](queries/) :
 
 ### Requête 1 : Étudiants et leurs programmes (`q1_students_programs.rq`)
 ```sparql
@@ -220,7 +228,7 @@ PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?student ?studentName ?email ?programName ?degreeLevel ?status
+SELECT DISTINCT ?student ?studentName ?email ?programName ?degreeLevel ?status
 WHERE {
     ?student a unigraph:Student ;
              foaf:name ?studentName ;
@@ -239,7 +247,7 @@ ORDER BY ?studentName
 PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-SELECT ?instructor ?instructorName ?rank ?salary ?departmentName ?departmentCode
+SELECT DISTINCT ?instructor ?instructorName ?rank ?salary ?departmentName ?departmentCode
 WHERE {
     ?instructor unigraph:belongsToDepartment ?department ;
                 foaf:name ?instructorName .
@@ -266,7 +274,7 @@ ORDER BY ?departmentName ?instructorName
 PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-SELECT ?departmentName (COUNT(?course) AS ?courseCount) (AVG(?credits) AS ?avgCredits)
+SELECT ?departmentName (COUNT(DISTINCT ?course) AS ?courseCount) (AVG(?credits) AS ?avgCredits)
 WHERE {
     ?course a unigraph:Course ;
             unigraph:courseOfDepartment ?department .
@@ -281,16 +289,115 @@ ORDER BY DESC(?courseCount)
 ### Requête 7 : Conseillers et étudiants supervisés (`q7_advisor_advisees.rq`)
 *Résultat : 50 paires conseiller-étudiant.*
 
+### Requête 8 : Programmes académiques et départements (`q8_programs_departments.rq`)
+
+* **Objectif :** Lister l'ensemble des cursus et programmes académiques dispensés par l'université, leur département responsable, le cycle d'études associé (`degreeLevel`) et le volume total de crédits obligatoires (`creditsRequired`).
+* **Variables & relations interrogées :**
+  * `?program` : URI de l'entité programme (`a unigraph:Program`).
+  * `?programName` : Intitulé officiel du programme d'études (`rdfs:label`).
+  * `?degreeLevel` : Niveau de diplôme (ex. `bachelor`, `master`, `doctorate`) via `unigraph:degreeLevel` (*OPTIONAL*).
+  * `?creditsRequired` : Total des crédits requis via `unigraph:creditsRequired` (*OPTIONAL*).
+  * `?departmentName` : Nom du département académique de rattachement via `foaf:name` (*OPTIONAL*).
+  * `?departmentCode` : Code court officiel du département via `unigraph:code` (*OPTIONAL*).
+  * **Relation clé :** `?program unigraph:programOfDepartment ?department` (rattachement direct du programme à son département d'enseignement).
+
+```sparql
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?program ?programName ?degreeLevel ?creditsRequired ?departmentName ?departmentCode
+WHERE {
+    ?program a unigraph:Program ;
+             rdfs:label ?programName ;
+             unigraph:programOfDepartment ?department .
+    OPTIONAL { ?program unigraph:degreeLevel ?degreeLevel }
+    OPTIONAL { ?program unigraph:creditsRequired ?creditsRequired }
+    OPTIONAL { ?department foaf:name ?departmentName }
+    OPTIONAL { ?department unigraph:code ?departmentCode }
+}
+ORDER BY ?departmentName ?programName
+```
+
+*Résultat : 40 lignes. Exemple : Programme `<https://unigraph.org/data/program/35>` (`Environmental Computational Health`), niveau `bachelor`, `30` crédits requis, département `Biology` (`CLTK`).*
+
+### Requête 9 : Cursus et inscriptions complètes des étudiants (`q9_student_course_enrollments.rq`)
+
+* **Objectif :** Reconstituer le parcours pédagogique complet des étudiants en liant chaque inscription à sa section, au cours magistral correspondant, au département organisateur et à la note obtenue.
+* **Variables & relations interrogées :**
+  * `?studentName` : Nom complet de l'étudiant via `?student foaf:name`.
+  * `?courseCode` : Code officiel du cours via `?course unigraph:code`.
+  * `?courseTitle` : Titre pédagogique du cours via `?course rdfs:label`.
+  * `?sectionNumber` : Numéro de section assignée via `?section unigraph:sectionNumber`.
+  * `?departmentName` : Département responsable du cours via `?department foaf:name`.
+  * `?letterGrade` : Note littérale obtenue à l'évaluation (ex. `A-`, `B+`) via `?enrollment unigraph:letterGrade` (*OPTIONAL*).
+  * **Chaîne relationnelle :** `?enrollment a unigraph:Enrollment` $\rightarrow$ `unigraph:enrollmentStudent ?student` $\rightarrow$ `unigraph:enrollmentSection ?section` $\rightarrow$ `unigraph:sectionOfCourse ?course` $\rightarrow$ `unigraph:courseOfDepartment ?department`.
+
+```sparql
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?studentName ?courseCode ?courseTitle ?sectionNumber ?departmentName ?letterGrade
+WHERE {
+    ?enrollment a unigraph:Enrollment ;
+                unigraph:enrollmentStudent ?student ;
+                unigraph:enrollmentSection ?section .
+    ?student foaf:name ?studentName .
+    ?section unigraph:sectionOfCourse ?course ;
+             unigraph:sectionNumber ?sectionNumber .
+    ?course unigraph:code ?courseCode ;
+            rdfs:label ?courseTitle ;
+            unigraph:courseOfDepartment ?department .
+    ?department foaf:name ?departmentName .
+    OPTIONAL { ?enrollment unigraph:letterGrade ?letterGrade }
+}
+ORDER BY ?studentName ?courseCode
+```
+
+*Résultat : 1 000 lignes. Exemple : `Alexandra Hessel`, cours `BJKN-995` (*Principles To Algorithms Calculus*), section `1`, département `Mechanical Engineering`, note `B+`.*
+
+### Requête 10 : Arborescence des prérequis de cours (`q10_course_prerequisites.rq`)
+
+* **Objectif :** Modéliser et explorer les dépendances pédagogiques du catalogue universitaire en reliant chaque cours cible à son cours obligatoire prérequis.
+* **Variables & relations interrogées :**
+  * `?courseCode` : Code officiel du cours cible via `?course unigraph:code`.
+  * `?courseTitle` : Titre du cours cible via `?course rdfs:label`.
+  * `?prerequisiteCode` : Code du cours prérequis via `?prereq unigraph:code`.
+  * `?prerequisiteTitle` : Titre du cours prérequis via `?prereq rdfs:label`.
+  * **Relation clé :** `?course unigraph:hasPrerequisite ?prereq` reliant deux cours distincts (`unigraph:Course`).
+
+```sparql
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?courseCode ?courseTitle ?prerequisiteCode ?prerequisiteTitle
+WHERE {
+    ?course a unigraph:Course ;
+            unigraph:code ?courseCode ;
+            rdfs:label ?courseTitle ;
+            unigraph:hasPrerequisite ?prereq .
+    ?prereq unigraph:code ?prerequisiteCode ;
+            rdfs:label ?prerequisiteTitle .
+}
+ORDER BY ?courseCode ?prerequisiteCode
+```
+
+*Résultat : 299 lignes (sur 300 dépendances CSV sources, 1 auto-dépendance invalide ayant été assainie à la conversion). Exemple : Le cours `ABLO-358` (*To Of Foundations*) requiert le cours préalable `MZXR-857` (*Statistics Design Algorithms Analysis*).*
+
 ---
 
 ## 6. Démonstration de l'Inférence RDFS (Avant vs Après)
 
-L'inférence sémantique est calculée par le module [`src/inference.py`](file:///c:/Users/DELL/Desktop/UniGraph/src/inference.py) via `owlrl.DeductiveClosure(owlrl.RDFS_Semantics)`.
+L'inférence sémantique est calculée par le module [`src/inference.py`](src/inference.py) via `owlrl.DeductiveClosure(CleanRDFS_Semantics)`.
+
+> [!IMPORTANT]
+> **Correction d'un bug d'inférence critique :** La classe `owlrl.RDFS_Semantics` contient une règle cachée `one_time_rules()` qui duplique les littéraux `xsd:integer` en `xsd:decimal` (ex: crédits `1` → `1.0`). Cette duplication déclenchait à tort la propagation de `rdfs:domain` et typait des nœuds **Programme** comme `unigraph:Course` et des nœuds **Département** comme `unigraph:CourseSection`. La sous-classe `CleanRDFS_Semantics` remplace `one_time_rules()` par une méthode vide pour éliminer ce comportement.
 
 ### 6.1 Bilan Quantitatif Global
-* **Triplets initiaux (bruts) :** `15 621`
-* **Triplets après clôture RDFS :** `25 112`
-* **Nouveaux triplets déduits :** **`+9 491`**
+* **Triplets initiaux (bruts) :** `15 636`
+* **Triplets après clôture RDFS (propre) :** `23 904`
+* **Nouveaux triplets déduits :** **`+8 268`**
 * Fichiers générés : `data/unigraph_inferred.ttl` (graphe complet) et `data/inferred_triples.ttl` (triplets déduits isolés).
 
 ### 6.2 Preuves Expérimentales Détaillées
@@ -343,23 +450,26 @@ L'inférence sémantique est calculée par le module [`src/inference.py`](file:/
 
 ## 7. Points d'Accès de l'API REST Flask & Exemples JSON
 
-L'API REST est implémentée dans [`src/api.py`](file:///c:/Users/DELL/Desktop/UniGraph/src/api.py). Elle retourne des réponses JSON conformes avec gestion systématique des codes de statut HTTP (`200`, `400`, `404`, `500`) et support CORS.
+L'API REST est implémentée dans [`src/api.py`](src/api.py). Elle retourne des réponses JSON conformes avec gestion systématique des codes de statut HTTP (`200`, `400`, `404`, `500`) et support CORS.
 
-### Résumé des 11 Endpoints REST
+### Résumé des 14 Endpoints
 
 | Méthode | Route | Description | Exemple de Paramètre |
 | :---: | :--- | :--- | :--- |
 | `GET` | `/api/status` | Métriques globales et état de santé du graphe | Aucun |
 | `GET` | `/api/ontology` | Structure des classes, propriétés et axiomes | Aucun |
 | `GET` | `/api/students` | Liste des étudiants, programmes et conseillers | `?limit=10&status=enrolled` |
-| `GET` | `/api/instructors` | Liste des enseignants et départements | `?department=Engineering` |
-| `GET` | `/api/courses` | Catalogue des cours et crédits | `?limit=5` |
+| `GET` | `/api/instructors` | Liste des enseignants et départements | `?department=Engineering&rank=professor` |
+| `GET` | `/api/departments` | Liste des 14 départements avec budgets | Aucun |
+| `GET` | `/api/programs` | Liste des 40 programmes par département | `?limit=20&department=Computer` |
+| `GET` | `/api/courses` | Catalogue des cours et crédits | `?limit=5&department=Physics` |
 | `GET` | `/api/sections` | Sections de cours, horaires et semestres | Aucun |
 | `GET` | `/api/enrollments` | Inscriptions des étudiants et notes obtenues | `?limit=10` |
-| `GET` | `/api/sparql/queries` | Liste des 7 requêtes SPARQL pré-configurées | Aucun |
+| `GET` | `/api/sparql/queries` | Liste des 10 requêtes SPARQL pré-configurées | Aucun |
 | `POST` | `/api/sparql/execute` | Exécuteur dynamique SPARQL (brut ou inféré) | Body JSON |
 | `GET` | `/api/inference/demo` | Rapport complet des démonstrations avant/après | Aucun |
-| `GET` | `/api/export/<target>` | Téléchargement/consultation d'un export RDF ou du diagramme (`raw`, `inferred`, `ontology`, `diagram`) | `?` aucun (cible dans l'URL) |
+| `GET` | `/api/export/<target>` | Téléchargement des graphes Turtle ou du diagramme | `raw`, `inferred`, `inferred_only`, `ontology`, `diagram` |
+| `GET` | `/` | Interface web interactive | Aucun |
 
 ### Exemples de Réponses JSON
 
@@ -372,9 +482,9 @@ L'API REST est implémentée dans [`src/api.py`](file:///c:/Users/DELL/Desktop/U
     "service": "UniGraph REST API",
     "version": "1.0.0",
     "graph_statistics": {
-      "raw_triples": 15621,
-      "inferred_triples_total": 25112,
-      "newly_inferred_triples": 9491
+      "raw_triples": 15636,
+      "inferred_triples_total": 23904,
+      "newly_inferred_triples": 8268
     },
     "entity_counts": {
       "students": 50,
@@ -498,37 +608,43 @@ Une fois le serveur lancé (`python run.py serve`), ouvrez votre navigateur à l
 
 ## 10. Tests et Validation Automatisée
 
-Le projet intègre **35 tests automatisés** sous `pytest` couvrant l'intégralité du cycle de vie des données sémantiques :
+Le projet intègre **49 tests automatisés** sous `pytest` couvrant l'intégralité du cycle de vie des données sémantiques :
 
 ```bash
 pytest -v
 ```
 
-### Détail des 35 Tests Réussis
+### Détail des 49 Tests Réussis
 
 * **Ontologie & Axiomes (`test_ontology.py` - 5 tests) :**
   * `test_ontology_classes_count` : Présence de $\ge 5$ classes RDFS (13 définies).
-  * `test_ontology_properties_count` : Présence de $\ge 8$ propriétés (18 définies).
+  * `test_ontology_properties_count` : Présence de $\ge 8$ propriétés (19 définies).
   * `test_subclass_hierarchy` : Vérification des hiérarchies `rdfs:subClassOf` et intégration de `foaf:Person`.
   * `test_subproperty_relationship` : Vérification de `unigraph:advises rdfs:subPropertyOf unigraph:supervises`.
-  * `test_property_domains_and_ranges` : Contrôle des `rdfs:domain` et `rdfs:range`.
-* **Génération RDF & Traçabilité (`test_converter.py` - 4 tests) :**
-  * `test_triple_count` : Volume supérieur à 10 000 triplets (15 621 validés).
-  * `test_entity_types_present` : Comptage strict de toutes les entités relationnelles converties.
-  * `test_source_id_traceability` : Présence des identifiants `unigraph:sourceId`.
-  * `test_foaf_integration` : Rattachement des propriétés `foaf:name` et `foaf:mbox`.
-* **Moteur SPARQL (`test_sparql.py` - 8 tests) :**
-  * Validation syntaxique et exécution des requêtes `q1` à `q7` avec vérification des résultats attendus.
-* **Raisonnement Sémantique (`test_inference.py` - 5 tests) :**
-  * Preuve de la génération de nouveaux triplets par clôture déductive.
-  * Validation stricte de la règle `rdfs7` sur `supervises` (0 avant $\rightarrow$ 50 après).
-  * Validation stricte de la règle `rdfs9` sur `foaf:Person` (0 avant $\rightarrow$ 60 après).
-  * Validation de la règle `rdfs7` sur `involvedInCourse` (0 avant $\rightarrow$ 1 000 après).
-  * Validation de la règle `rdfs9` sur `Instructor` (0 avant $\rightarrow$ 10 après).
-* **API REST Flask (`test_api.py` - 13 tests) :**
-  * Validation des statuts HTTP `200` et formats JSON de tous les endpoints (`/api/status`, `/api/ontology`, `/api/students`, `/api/instructors`, `/api/courses`, `/api/sections`, `/api/enrollments`, `/api/sparql/queries`, `/api/sparql/execute`, `/api/inference/demo`).
-  * Validation des statuts `400 Bad Request` sur syntaxe SPARQL invalide.
-  * Validation des statuts `404 Not Found` sur routes inexistantes.
+  * `test_property_domains_and_ranges` : Contrôle des domaines et étendues (`rdfs:domain` et `rdfs:range`) dont `programOfDepartment` et `hasOfficeRoom`.
+* **Génération RDF & Traçabilité (`test_converter.py` - 5 tests) :**
+  * `test_triple_count` : Volume supérieur à 10 000 triplets (15 636 validés).
+  * `test_entity_types_present` : Comptage strict de toutes les entités relationnelles converties (50 étudiants, 600 cours, 14 départements...).
+  * `test_source_id_traceability` : Présence des identifiants `unigraph:sourceId` et `unigraph:sourcePersonId`.
+  * `test_clean_property_usage` : Vérification sémantique qu'aucun Programme n'utilise `courseOfDepartment` et qu'aucun Département n'utilise `heldInRoom`.
+  * `test_foaf_integration` : Rattachement systématique des propriétés `foaf:name` et `foaf:mbox`.
+* **Moteur SPARQL (`test_sparql.py` - 13 tests) :**
+  * `test_list_queries` : Disponibilité de l'ensemble des requêtes pré-définies.
+  * Validation syntaxique et exécution des requêtes `q1` à `q10` avec vérification stricte des résultats attendus.
+  * `test_query_empty_results` & `test_query_invalid_syntax` : Gestion des requêtes sans correspondance et erreurs de syntaxe.
+* **Raisonnement Sémantique (`test_inference.py` - 6 tests) :**
+  * `test_inferred_triples_exist` : Preuve de la déduction de nouveaux triplets par clôture déductive.
+  * `test_demo1_subproperty_supervises` : Règle `rdfs7` sur `supervises` (0 avant $\rightarrow$ 50 après).
+  * `test_demo2_subclass_foaf_person` : Règle `rdfs9` sur `foaf:Person` (0 avant $\rightarrow$ 60 après).
+  * `test_demo3_subproperty_involved` : Règle `rdfs7` sur `involvedInCourse` (0 avant $\rightarrow$ 1 000 après).
+  * `test_demo4_subclass_instructor` : Règle `rdfs9` sur `Instructor` (0 avant $\rightarrow$ 10 après).
+  * `test_semantic_cleanliness` : Garantie d'absence de typages parasites (0 Programme typé en Course, 0 Département typé en Section).
+* **API REST Flask (`test_api.py` - 20 tests) :**
+  * Validation des statuts HTTP `200` et formats JSON de tous les endpoints (`/api/status`, `/api/ontology`, `/api/students`, `/api/instructors`, `/api/departments`, `/api/programs`, `/api/courses`, `/api/sections`, `/api/enrollments`, `/api/sparql/queries`, `/api/sparql/execute`, `/api/inference/demo`).
+  * Tests d'exécution SPARQL par identifiant prédéfini et par chaîne personnalisée.
+  * Validation des statuts `400 Bad Request` sur syntaxe invalide, limite négative ou non-entière, corps vide, corps non-dict.
+  * Validation des statuts `404 Not Found` sur routes inexistantes et query_id inconnu.
+  * Téléchargement des exports Turtle (`inferred_only`).
 
 ---
 
@@ -552,12 +668,12 @@ Voici les points clés à mettre en avant lors de la soutenance :
 ### 4. Démonstration Technique & API (3 min)
 * Ouvrez l'interface web locale (`http://127.0.0.1:5000`).
 * Lancez une requête SPARQL (par exemple `q6_department_course_counts`).
-* Montrez la console API REST en direct ou le terminal avec les 35 tests réussis (`pytest`).
+* Montrez la console API REST en direct ou le terminal avec les 49 tests réussis (`pytest`).
 
 ### 5. Questions Fréquentes du Jury
 
 * **Q : Pourquoi avoir séparé le graphe brut du graphe inféré ?**  
-  *R :* Pour pouvoir quantifier et prouver rigoureusement ce que le raisonneur a apporté (+9 491 triplets), sans jamais confondre ce qui relève de l'assertion explicite et de la déduction logique.
+  *R :* Pour pouvoir quantifier et prouver rigoureusement ce que le raisonneur a apporté (+8 268 triplets), sans jamais confondre ce qui relève de l'assertion explicite et de la déduction logique.
 * **Q : Comment garantissez-vous qu'aucune donnée n'a été inventée ?**  
   *R :* Chaque entité conserve sa clé d'origine via `unigraph:sourceId` et le script `inspect_dataset.py` a validé au préalable les 30 tables CSV sources.
 * **Q : Quelle est la différence entre RDFS et OWL ?**  
@@ -571,38 +687,3 @@ Conformément aux directives de transparence académique :
 * **Assistance IA :** Ce projet a été développé en binôme d'ingénierie assistée par modèle de raisonnement IA pour la formalisation du code modulaire, la rédaction des tests unitaires et la documentation francophone.
 * **Vérification humaine et reproductibilité :** Tous les scripts, ontologies, requêtes SPARQL et tests ont été exécutés, validés et testés avec succès dans l'environnement Python de l'hôte.
 * **Sécurité & Confidentialité :** Aucun secret, mot de passe ou clé API n'est présent dans le projet. Les chemins sont relatifs et portables.
-
-
----
-
-## Gestion des erreurs de l'API
-
-L'API renvoie des réponses JSON pour signaler les erreurs rencontrées pendant le traitement des requêtes.
-
-| Situation | Code HTTP | Comportement |
-|---|---:|---|
-| Route inconnue | `404` | Réponse JSON indiquant `Endpoint not found`. |
-| Erreur interne non gérée | `500` | Réponse JSON générique indiquant `Internal server error`. |
-| Cible d'export inconnue ou fichier absent | `404` | Réponse JSON indiquant que la cible demandée est introuvable. |
-| Erreur pendant l'exécution SPARQL | `200` avec `success: false` dans le service SPARQL | Le résultat contient le message d'erreur et un compteur de résultats à zéro. |
-
-**Conseil d'utilisation :** vérifier le champ `success` dans les réponses JSON, et pas uniquement le code HTTP. Le service SPARQL retourne notamment un objet structuré avec `success`, `results`, `count`, `execution_time_seconds` et `error`.
-
-
-## Structure du dépôt
-
-```text
-UniGraph/
-├── data/          # Dataset CSV et graphes RDF générés/fournis
-├── docs/          # Présentation du projet et diagrammes
-├── ontology/      # Ontologie RDFS et visualisations
-├── queries/       # Requêtes SPARQL prédéfinies (.rq)
-├── src/           # Modules Python : conversion, inférence, API...
-├── static/        # CSS et JavaScript de l'interface
-├── templates/     # Templates HTML Flask
-├── tests/         # Tests automatisés Pytest
-├── .gitignore
-├── README.md
-├── requirements.txt
-└── run.py         # Interface en ligne de commande
-```

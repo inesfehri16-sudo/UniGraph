@@ -155,6 +155,12 @@ unigraph:gradePoints a rdf:Property ;
     rdfs:domain unigraph:Enrollment ;
     rdfs:range xsd:decimal .
 
+unigraph:hasOfficeRoom a rdf:Property ;
+    rdfs:label "hasOfficeRoom"@en ;
+    rdfs:comment "The office room allocated to an academic department."@en ;
+    rdfs:domain unigraph:Department ;
+    rdfs:range unigraph:Room .
+
 unigraph:hasPrerequisite a rdf:Property ;
     rdfs:label "hasPrerequisite"@en ;
     rdfs:comment "Prerequisite course required before taking this course."@en ;
@@ -197,6 +203,12 @@ unigraph:offersProgram a rdf:Property ;
     rdfs:domain unigraph:Department ;
     rdfs:range unigraph:Program .
 
+unigraph:programOfDepartment a rdf:Property ;
+    rdfs:label "programOfDepartment"@en ;
+    rdfs:comment "The academic department that administers this program."@en ;
+    rdfs:domain unigraph:Program ;
+    rdfs:range unigraph:Department .
+
 unigraph:rank a rdf:Property ;
     rdfs:label "rank"@en ;
     rdfs:comment "Academic faculty rank (e.g. professor, assistant_professor)."@en ;
@@ -231,6 +243,12 @@ unigraph:sourceId a rdf:Property ;
     rdfs:label "sourceId"@en ;
     rdfs:comment "Traceability identifier preserved from the original CSV dataset."@en ;
     rdfs:domain rdfs:Resource ;
+    rdfs:range xsd:string .
+
+unigraph:sourcePersonId a rdf:Property ;
+    rdfs:label "sourcePersonId"@en ;
+    rdfs:comment "Traceability identifier of person record from people.csv."@en ;
+    rdfs:domain unigraph:Person ;
     rdfs:range xsd:string .
 
 unigraph:startDate a rdf:Property ;

@@ -88,3 +88,60 @@ def test_query7_advisor_advisees(sparql_service):
     res = sparql_service.execute_query(q_text)
     assert res["success"] is True
     assert res["count"] == 50
+
+
+def test_query8_programs_departments(sparql_service):
+    """Query 8: Programs and Departments must return 40 rows."""
+    q_text = sparql_service.get_query_by_id("q8_programs_departments")
+    assert q_text is not None
+    res = sparql_service.execute_query(q_text)
+    assert res["success"] is True
+    assert res["count"] == 40
+    assert "programName" in res["variables"]
+    assert "departmentName" in res["variables"]
+
+
+def test_query9_student_course_enrollments(sparql_service):
+    """Query 9: Student course enrollments must return 1000 rows."""
+    q_text = sparql_service.get_query_by_id("q9_student_course_enrollments")
+    assert q_text is not None
+    res = sparql_service.execute_query(q_text)
+    assert res["success"] is True
+    assert res["count"] == 1000
+    assert "studentName" in res["variables"]
+    assert "courseCode" in res["variables"]
+
+
+def test_query10_course_prerequisites(sparql_service):
+    """Query 10: Course prerequisites must return 299 rows."""
+    q_text = sparql_service.get_query_by_id("q10_course_prerequisites")
+    assert q_text is not None
+    res = sparql_service.execute_query(q_text)
+    assert res["success"] is True
+    assert res["count"] == 299
+    assert "prerequisiteCode" in res["variables"]
+
+
+def test_query_empty_results(sparql_service):
+    """A valid query matching nonexistent data must return count=0 and success=True."""
+    empty_q = """
+    PREFIX unigraph: <https://unigraph.org/schema#>
+    SELECT ?s WHERE {
+        ?s a unigraph:Student ;
+           unigraph:status "NONEXISTENT_STATUS_XYZ" .
+    }
+    """
+    res = sparql_service.execute_query(empty_q)
+    assert res["success"] is True
+    assert res["count"] == 0
+    assert res["results"] == []
+    assert res["error"] is None
+
+
+def test_query_invalid_syntax(sparql_service):
+    """An invalid SPARQL query must return success=False and an error message."""
+    bad_q = "SELECT ?x WHERE { INVALID SYNTAX WITHOUT CLOSING"
+    res = sparql_service.execute_query(bad_q)
+    assert res["success"] is False
+    assert res["count"] == 0
+    assert res["error"] is not None

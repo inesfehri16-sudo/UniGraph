@@ -61,6 +61,32 @@ def test_endpoint_instructors(client):
     assert "departmentName" in first
 
 
+def test_endpoint_departments(client):
+    """GET /api/departments returns 200, valid JSON, and 14 departments."""
+    resp = client.get("/api/departments")
+    assert resp.status_code == 200
+    assert resp.is_json
+    data = resp.get_json()
+    assert data["success"] is True
+    assert data["count"] == 14
+    first = data["data"][0]
+    assert "name" in first
+    assert "code" in first
+
+
+def test_endpoint_programs(client):
+    """GET /api/programs returns 200, valid JSON, and academic programs."""
+    resp = client.get("/api/programs?limit=10")
+    assert resp.status_code == 200
+    assert resp.is_json
+    data = resp.get_json()
+    assert data["success"] is True
+    assert len(data["data"]) == 10
+    first = data["data"][0]
+    assert "name" in first
+    assert "departmentName" in first
+
+
 def test_endpoint_courses(client):
     """GET /api/courses returns 200, valid JSON, and course records."""
     resp = client.get("/api/courses?limit=5")
@@ -149,6 +175,44 @@ def test_endpoint_inference_demo(client):
     demos = data["data"]["demonstrations"]
     assert "demo1_subproperty_supervises" in demos
     assert "demo2_subclass_foaf_person" in demos
+
+
+def test_endpoint_invalid_limit(client):
+    """GET /api/students with invalid limit parameter returns 400."""
+    resp1 = client.get("/api/students?limit=-5")
+    assert resp1.status_code == 400
+    assert resp1.get_json()["success"] is False
+
+    resp2 = client.get("/api/students?limit=abc")
+    assert resp2.status_code == 400
+    assert resp2.get_json()["success"] is False
+
+
+def test_endpoint_sparql_missing_body(client):
+    """POST /api/sparql/execute with empty body returns 400."""
+    resp = client.post("/api/sparql/execute", json={})
+    assert resp.status_code == 400
+    assert resp.get_json()["success"] is False
+
+
+def test_endpoint_sparql_unknown_query_id(client):
+    """POST /api/sparql/execute with nonexistent query_id returns 404."""
+    resp = client.post("/api/sparql/execute", json={"query_id": "nonexistent_query_999"})
+    assert resp.status_code == 404
+    assert resp.get_json()["success"] is False
+
+
+def test_endpoint_sparql_non_dict_body(client):
+    """POST /api/sparql/execute with non-dict JSON body returns 400."""
+    resp = client.post("/api/sparql/execute", data="[1, 2, 3]", content_type="application/json")
+    assert resp.status_code == 400
+    assert resp.get_json()["success"] is False
+
+
+def test_endpoint_export_inferred_only(client):
+    """GET /api/export/inferred_only returns 200."""
+    resp = client.get("/api/export/inferred_only")
+    assert resp.status_code == 200
 
 
 def test_endpoint_404_handling(client):

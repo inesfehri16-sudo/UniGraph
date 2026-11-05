@@ -4,7 +4,7 @@ PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?enrollment ?studentName ?courseCode ?courseTitle ?sectionNumber ?letterGrade ?gradePoints
+SELECT DISTINCT ?enrollment ?studentName ?courseCode ?courseTitle ?sectionNumber ?letterGrade ?gradePoints
 WHERE {
     ?enrollment a unigraph:Enrollment ;
                 unigraph:enrollmentStudent ?student ;

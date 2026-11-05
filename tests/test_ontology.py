@@ -69,3 +69,11 @@ def test_property_domains_and_ranges(ontology_graph):
     # unigraph:taughtBy
     assert (UNIGRAPH.taughtBy, RDFS.domain, UNIGRAPH.CourseSection) in ontology_graph
     assert (UNIGRAPH.taughtBy, RDFS.range, UNIGRAPH.Instructor) in ontology_graph
+
+    # unigraph:programOfDepartment
+    assert (UNIGRAPH.programOfDepartment, RDFS.domain, UNIGRAPH.Program) in ontology_graph
+    assert (UNIGRAPH.programOfDepartment, RDFS.range, UNIGRAPH.Department) in ontology_graph
+
+    # unigraph:hasOfficeRoom
+    assert (UNIGRAPH.hasOfficeRoom, RDFS.domain, UNIGRAPH.Department) in ontology_graph
+    assert (UNIGRAPH.hasOfficeRoom, RDFS.range, UNIGRAPH.Room) in ontology_graph

@@ -105,6 +105,14 @@ def build_ontology() -> Graph:
             None
         ),
         (
+            UNIGRAPH.programOfDepartment,
+            "programOfDepartment",
+            "The academic department that administers this program.",
+            UNIGRAPH.Program,
+            UNIGRAPH.Department,
+            None
+        ),
+        (
             UNIGRAPH.offersCourse,
             "offersCourse",
             "A course offered by a department.",
@@ -149,6 +157,14 @@ def build_ontology() -> Graph:
             "heldInRoom",
             "The room where a course section meets.",
             UNIGRAPH.CourseSection,
+            UNIGRAPH.Room,
+            None
+        ),
+        (
+            UNIGRAPH.hasOfficeRoom,
+            "hasOfficeRoom",
+            "The office room allocated to an academic department.",
+            UNIGRAPH.Department,
             UNIGRAPH.Room,
             None
         ),
@@ -218,6 +234,7 @@ def build_ontology() -> Graph:
     # =========================================================================
     datatype_properties = [
         (UNIGRAPH.sourceId, "sourceId", "Traceability identifier preserved from the original CSV dataset.", RDFS.Resource, XSD.string),
+        (UNIGRAPH.sourcePersonId, "sourcePersonId", "Traceability identifier of person record from people.csv.", UNIGRAPH.Person, XSD.string),
         (UNIGRAPH.code, "code", "Official university identifier code (department or course).", RDFS.Resource, XSD.string),
         (UNIGRAPH.credits, "credits", "Number of academic credit hours for a course.", UNIGRAPH.Course, XSD.integer),
         (UNIGRAPH.creditsRequired, "creditsRequired", "Total credits required for a degree program.", UNIGRAPH.Program, XSD.integer),

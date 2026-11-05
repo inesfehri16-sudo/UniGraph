@@ -4,7 +4,7 @@ PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?student ?studentName ?email ?programName ?degreeLevel ?status
+SELECT DISTINCT ?student ?studentName ?email ?programName ?degreeLevel ?status
 WHERE {
     ?student a unigraph:Student ;
              foaf:name ?studentName ;

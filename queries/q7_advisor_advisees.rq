@@ -3,7 +3,7 @@
 PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-SELECT ?instructorName ?instructorRank ?studentName ?studentStatus
+SELECT DISTINCT ?instructorName ?instructorRank ?studentName ?studentStatus
 WHERE {
     ?instructor unigraph:advises ?student ;
                 foaf:name ?instructorName .

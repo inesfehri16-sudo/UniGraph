@@ -41,12 +41,26 @@ def test_entity_types_present(raw_graph):
 
 
 def test_source_id_traceability(raw_graph):
-    """Verify that sourceId properties link entities back to CSV IDs."""
+    """Verify that sourceId and sourcePersonId properties link entities back to CSV IDs."""
     source_ids = list(raw_graph.subject_objects(UNIGRAPH.sourceId))
     assert len(source_ids) > 1000, "Traceability sourceId triples must be present."
     # Check student 1
     stud_1 = DATA["student/1"]
     assert any(o for s, o in raw_graph.predicate_objects(stud_1) if s == UNIGRAPH.sourceId)
+    assert any(o for s, o in raw_graph.predicate_objects(stud_1) if s == UNIGRAPH.sourcePersonId)
+
+
+def test_clean_property_usage(raw_graph):
+    """Verify that properties are used strictly conforming to their domain/range."""
+    # Programs must have programOfDepartment, NOT courseOfDepartment
+    prog_courses = list(raw_graph.triples((None, UNIGRAPH.courseOfDepartment, None)))
+    for s, _, _ in prog_courses:
+        assert "program/" not in str(s), "A Program must not be the subject of courseOfDepartment"
+
+    # Departments must have hasOfficeRoom, NOT heldInRoom
+    dept_rooms = list(raw_graph.triples((None, UNIGRAPH.heldInRoom, None)))
+    for s, _, _ in dept_rooms:
+        assert "department/" not in str(s), "A Department must not be the subject of heldInRoom"
 
 
 def test_foaf_integration(raw_graph):

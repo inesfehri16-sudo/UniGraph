@@ -2,7 +2,7 @@
 PREFIX unigraph: <https://unigraph.org/schema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-SELECT ?departmentName (COUNT(?course) AS ?courseCount) (AVG(?credits) AS ?avgCredits)
+SELECT ?departmentName (COUNT(DISTINCT ?course) AS ?courseCount) (AVG(?credits) AS ?avgCredits)
 WHERE {
     ?course a unigraph:Course ;
             unigraph:courseOfDepartment ?department .
