@@ -1,0 +1,20 @@
+# Query 5: List student enrollments in course sections
+# Displays student name, course code, course title, section number, and earned grade
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?enrollment ?studentName ?courseCode ?courseTitle ?sectionNumber ?letterGrade ?gradePoints
+WHERE {
+    ?enrollment a unigraph:Enrollment ;
+                unigraph:enrollmentStudent ?student ;
+                unigraph:enrollmentSection ?section .
+    ?student foaf:name ?studentName .
+    ?section unigraph:sectionOfCourse ?course .
+    OPTIONAL { ?section unigraph:sectionNumber ?sectionNumber }
+    OPTIONAL { ?course unigraph:code ?courseCode }
+    OPTIONAL { ?course rdfs:label ?courseTitle }
+    OPTIONAL { ?enrollment unigraph:letterGrade ?letterGrade }
+    OPTIONAL { ?enrollment unigraph:gradePoints ?gradePoints }
+}
+ORDER BY ?studentName ?courseCode

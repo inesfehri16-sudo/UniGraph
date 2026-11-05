@@ -1,0 +1,115 @@
+classDiagram
+    direction TB
+    
+    class foaf_Person {
+        <<FOAF Vocabulary>>
+        +String name
+        +String firstName
+        +String lastName
+        +String mbox
+    }
+    
+    class foaf_Organization {
+        <<FOAF Vocabulary>>
+        +String name
+    }
+
+    class Person {
+        <<UniGraph Schema>>
+        +String sourceId
+    }
+
+    class Student {
+        <<UniGraph Schema>>
+        +String status
+        +Date enrollmentDate
+    }
+
+    class Instructor {
+        <<UniGraph Schema>>
+        +String rank
+        +Decimal salary
+    }
+
+    class Professor {
+        <<UniGraph Schema>>
+    }
+
+    class Lecturer {
+        <<UniGraph Schema>>
+    }
+
+    class Department {
+        <<UniGraph Schema>>
+        +String code
+        +Decimal budget
+    }
+
+    class Program {
+        <<UniGraph Schema>>
+        +String degreeLevel
+        +Integer creditsRequired
+    }
+
+    class Course {
+        <<UniGraph Schema>>
+        +String code
+        +Integer credits
+        +String description
+    }
+
+    class CourseSection {
+        <<UniGraph Schema>>
+        +Integer sectionNumber
+        +Integer capacity
+    }
+
+    class Semester {
+        <<UniGraph Schema>>
+        +String season
+        +Integer year
+        +Date startDate
+        +Date endDate
+    }
+
+    class Enrollment {
+        <<UniGraph Schema>>
+        +String letterGrade
+        +Decimal gradePoints
+    }
+
+    class Room {
+        <<UniGraph Schema>>
+        +Integer capacity
+    }
+
+    class Building {
+        <<UniGraph Schema>>
+        +String code
+    }
+
+    %% Inheritance (rdfs:subClassOf)
+    foaf_Person <|-- Person : rdfs:subClassOf
+    Person <|-- Student : rdfs:subClassOf
+    Person <|-- Instructor : rdfs:subClassOf
+    Instructor <|-- Professor : rdfs:subClassOf
+    Instructor <|-- Lecturer : rdfs:subClassOf
+    foaf_Organization <|-- Department : rdfs:subClassOf
+
+    %% Relationships (Object Properties)
+    Instructor --> Student : advises (subPropertyOf supervises)
+    Instructor --> Student : supervises
+    Instructor --> Department : belongsToDepartment
+    Student --> Program : enrolledInProgram
+    Department --> Program : offersProgram
+    Department --> Course : offersCourse
+    Course --> Department : courseOfDepartment
+    Course --> Course : hasPrerequisite
+    CourseSection --> Course : sectionOfCourse
+    CourseSection --> Instructor : taughtBy
+    CourseSection --> Semester : heldInSemester
+    CourseSection --> Room : heldInRoom
+    Enrollment --> Student : enrollmentStudent
+    Enrollment --> CourseSection : enrollmentSection
+    Student --> CourseSection : enrolledInSection (subPropertyOf involvedInCourse)
+    Room --> Building : inBuilding

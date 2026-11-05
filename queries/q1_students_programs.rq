@@ -1,0 +1,17 @@
+# Query 1: List students and their academic programs
+# Displays student URI, full name, email, program name, degree level, and status
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?student ?studentName ?email ?programName ?degreeLevel ?status
+WHERE {
+    ?student a unigraph:Student ;
+             foaf:name ?studentName ;
+             unigraph:enrolledInProgram ?program .
+    OPTIONAL { ?student foaf:mbox ?mbox . BIND(STRAFTER(STR(?mbox), "mailto:") AS ?email) }
+    OPTIONAL { ?student unigraph:status ?status }
+    OPTIONAL { ?program rdfs:label ?programName }
+    OPTIONAL { ?program unigraph:degreeLevel ?degreeLevel }
+}
+ORDER BY ?studentName

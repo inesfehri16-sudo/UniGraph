@@ -1,0 +1,16 @@
+# Query 3: List courses and their offering departments
+# Displays course code, title, credit hours, and department name
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?course ?courseCode ?title ?credits ?departmentName
+WHERE {
+    ?course a unigraph:Course ;
+            unigraph:code ?courseCode ;
+            rdfs:label ?title ;
+            unigraph:courseOfDepartment ?department .
+    OPTIONAL { ?course unigraph:credits ?credits }
+    OPTIONAL { ?department foaf:name ?departmentName }
+}
+ORDER BY ?departmentName ?courseCode

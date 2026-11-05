@@ -1,0 +1,49 @@
+digraph UniGraphOntology {
+    rankdir=LR;
+    node [shape=box, style="filled,rounded", fontname="Helvetica", fontsize=10];
+    edge [fontname="Helvetica", fontsize=8];
+
+    // FOAF External Classes
+    "foaf:Person" [fillcolor="#E8F0FE", color="#4285F4", penwidth=2];
+    "foaf:Organization" [fillcolor="#E8F0FE", color="#4285F4", penwidth=2];
+
+    // UniGraph Classes
+    "unigraph:Person" [fillcolor="#E6F4EA", color="#34A853", penwidth=2];
+    "unigraph:Student" [fillcolor="#CEEAD6", color="#137333", penwidth=2];
+    "unigraph:Instructor" [fillcolor="#CEEAD6", color="#137333", penwidth=2];
+    "unigraph:Professor" [fillcolor="#A8DAB5", color="#0D652D", penwidth=2];
+    "unigraph:Lecturer" [fillcolor="#A8DAB5", color="#0D652D", penwidth=2];
+    "unigraph:Department" [fillcolor="#FEF7E0", color="#FBBC04", penwidth=2];
+    "unigraph:Program" [fillcolor="#FEF7E0", color="#F9AB00", penwidth=2];
+    "unigraph:Course" [fillcolor="#FCE8E6", color="#EA4335", penwidth=2];
+    "unigraph:CourseSection" [fillcolor="#FCE8E6", color="#D93025", penwidth=2];
+    "unigraph:Semester" [fillcolor="#F1F3F4", color="#5F6368", penwidth=2];
+    "unigraph:Enrollment" [fillcolor="#E8EAED", color="#3C4043", penwidth=2];
+    "unigraph:Room" [fillcolor="#F3E8FD", color="#9334E6", penwidth=2];
+    "unigraph:Building" [fillcolor="#F3E8FD", color="#7627BB", penwidth=2];
+
+    // SubClassOf (inheritance)
+    "unigraph:Person" -> "foaf:Person" [label="rdfs:subClassOf", style=dashed, color="#4285F4", arrowhead=empty];
+    "unigraph:Student" -> "unigraph:Person" [label="rdfs:subClassOf", style=dashed, color="#137333", arrowhead=empty];
+    "unigraph:Instructor" -> "unigraph:Person" [label="rdfs:subClassOf", style=dashed, color="#137333", arrowhead=empty];
+    "unigraph:Professor" -> "unigraph:Instructor" [label="rdfs:subClassOf", style=dashed, color="#0D652D", arrowhead=empty];
+    "unigraph:Lecturer" -> "unigraph:Instructor" [label="rdfs:subClassOf", style=dashed, color="#0D652D", arrowhead=empty];
+    "unigraph:Department" -> "foaf:Organization" [label="rdfs:subClassOf", style=dashed, color="#4285F4", arrowhead=empty];
+
+    // Object Properties
+    "unigraph:Instructor" -> "unigraph:Student" [label="unigraph:advises
+(subPropertyOf: supervises)", color="#137333"];
+    "unigraph:Instructor" -> "unigraph:Department" [label="unigraph:belongsToDepartment", color="#137333"];
+    "unigraph:Student" -> "unigraph:Program" [label="unigraph:enrolledInProgram", color="#137333"];
+    "unigraph:Department" -> "unigraph:Course" [label="unigraph:offersCourse", color="#FBBC04"];
+    "unigraph:Department" -> "unigraph:Program" [label="unigraph:offersProgram", color="#FBBC04"];
+    "unigraph:Course" -> "unigraph:Course" [label="unigraph:hasPrerequisite", color="#EA4335"];
+    "unigraph:CourseSection" -> "unigraph:Course" [label="unigraph:sectionOfCourse", color="#EA4335"];
+    "unigraph:CourseSection" -> "unigraph:Instructor" [label="unigraph:taughtBy", color="#EA4335"];
+    "unigraph:CourseSection" -> "unigraph:Semester" [label="unigraph:heldInSemester", color="#EA4335"];
+    "unigraph:CourseSection" -> "unigraph:Room" [label="unigraph:heldInRoom", color="#EA4335"];
+    "unigraph:Enrollment" -> "unigraph:Student" [label="unigraph:enrollmentStudent", color="#5F6368"];
+    "unigraph:Enrollment" -> "unigraph:CourseSection" [label="unigraph:enrollmentSection", color="#5F6368"];
+    "unigraph:Student" -> "unigraph:CourseSection" [label="unigraph:enrolledInSection", color="#137333"];
+    "unigraph:Room" -> "unigraph:Building" [label="unigraph:inBuilding", color="#9334E6"];
+}

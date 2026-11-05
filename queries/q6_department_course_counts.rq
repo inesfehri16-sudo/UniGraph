@@ -1,0 +1,13 @@
+# Query 6: Aggregate statistics - course counts and average credits per department
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?departmentName (COUNT(?course) AS ?courseCount) (AVG(?credits) AS ?avgCredits)
+WHERE {
+    ?course a unigraph:Course ;
+            unigraph:courseOfDepartment ?department .
+    OPTIONAL { ?course unigraph:credits ?credits }
+    OPTIONAL { ?department foaf:name ?departmentName }
+}
+GROUP BY ?departmentName
+ORDER BY DESC(?courseCount)

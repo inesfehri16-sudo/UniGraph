@@ -1,0 +1,22 @@
+# Query 4: List course sections with their instructors and semesters
+# Displays course title, section number, instructor name, semester season and year, room
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?section ?courseTitle ?sectionNumber ?instructorName ?semesterLabel ?roomLabel
+WHERE {
+    ?section a unigraph:CourseSection ;
+             unigraph:sectionOfCourse ?course ;
+             unigraph:taughtBy ?instructor ;
+             unigraph:heldInSemester ?semester .
+    OPTIONAL { ?section unigraph:sectionNumber ?sectionNumber }
+    OPTIONAL { ?course rdfs:label ?courseTitle }
+    OPTIONAL { ?instructor foaf:name ?instructorName }
+    OPTIONAL { ?semester rdfs:label ?semesterLabel }
+    OPTIONAL { 
+        ?section unigraph:heldInRoom ?room .
+        ?room rdfs:label ?roomLabel .
+    }
+}
+ORDER BY ?semesterLabel ?courseTitle ?sectionNumber

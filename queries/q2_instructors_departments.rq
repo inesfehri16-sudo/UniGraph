@@ -1,0 +1,16 @@
+# Query 2: List instructors and their affiliated departments
+# Displays instructor URI, full name, academic rank, salary, and department name
+PREFIX unigraph: <https://unigraph.org/schema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?instructor ?instructorName ?rank ?salary ?departmentName ?departmentCode
+WHERE {
+    ?instructor unigraph:belongsToDepartment ?department ;
+                foaf:name ?instructorName .
+    OPTIONAL { ?instructor unigraph:rank ?rank }
+    OPTIONAL { ?instructor unigraph:salary ?salary }
+    OPTIONAL { ?department foaf:name ?departmentName }
+    OPTIONAL { ?department unigraph:code ?departmentCode }
+}
+ORDER BY ?departmentName ?instructorName

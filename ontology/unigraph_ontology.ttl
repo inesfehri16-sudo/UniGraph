@@ -1,0 +1,278 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix unigraph: <https://unigraph.org/schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+unigraph:Building a rdfs:Class ;
+    rdfs:label "Building"@en ;
+    rdfs:comment "A campus building containing rooms."@en .
+
+unigraph:Course a rdfs:Class ;
+    rdfs:label "Course"@en ;
+    rdfs:comment "An academic course offered by a department."@en .
+
+unigraph:CourseSection a rdfs:Class ;
+    rdfs:label "CourseSection"@en ;
+    rdfs:comment "A specific offering or section of a course during a semester."@en .
+
+unigraph:Department a rdfs:Class ;
+    rdfs:label "Department"@en ;
+    rdfs:comment "An academic department within the university, specialization of foaf:Organization."@en ;
+    rdfs:subClassOf foaf:Organization .
+
+unigraph:Enrollment a rdfs:Class ;
+    rdfs:label "Enrollment"@en ;
+    rdfs:comment "A student's enrollment record in a course section including grade."@en .
+
+unigraph:Instructor a rdfs:Class ;
+    rdfs:label "Instructor"@en ;
+    rdfs:comment "A member of the academic teaching staff."@en ;
+    rdfs:subClassOf unigraph:Person .
+
+unigraph:Lecturer a rdfs:Class ;
+    rdfs:label "Lecturer"@en ;
+    rdfs:comment "A teaching instructor with lecturer rank."@en ;
+    rdfs:subClassOf unigraph:Instructor .
+
+unigraph:Person a rdfs:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "A human being within the university system, specialization of foaf:Person."@en ;
+    rdfs:subClassOf foaf:Person .
+
+unigraph:Professor a rdfs:Class ;
+    rdfs:label "Professor"@en ;
+    rdfs:comment "A tenured or tenure-track professor rank (assistant, associate, full)."@en ;
+    rdfs:subClassOf unigraph:Instructor .
+
+unigraph:Program a rdfs:Class ;
+    rdfs:label "Program"@en ;
+    rdfs:comment "A degree-granting academic curriculum/program."@en .
+
+unigraph:Room a rdfs:Class ;
+    rdfs:label "Room"@en ;
+    rdfs:comment "A physical room where sections are held or offices are located."@en .
+
+unigraph:Semester a rdfs:Class ;
+    rdfs:label "Semester"@en ;
+    rdfs:comment "An academic period (e.g. Fall 2021, Spring 2022)."@en .
+
+unigraph:Student a rdfs:Class ;
+    rdfs:label "Student"@en ;
+    rdfs:comment "An enrolled student in an academic program."@en ;
+    rdfs:subClassOf unigraph:Person .
+
+unigraph:advises a rdf:Property ;
+    rdfs:label "advises"@en ;
+    rdfs:comment "Academic advisory relationship: an instructor advises a student."@en ;
+    rdfs:domain unigraph:Instructor ;
+    rdfs:range unigraph:Student ;
+    rdfs:subPropertyOf unigraph:supervises .
+
+unigraph:belongsToDepartment a rdf:Property ;
+    rdfs:label "belongsToDepartment"@en ;
+    rdfs:comment "The department an instructor is affiliated with."@en ;
+    rdfs:domain unigraph:Instructor ;
+    rdfs:range unigraph:Department ;
+    rdfs:subPropertyOf unigraph:associatedWith .
+
+unigraph:budget a rdf:Property ;
+    rdfs:label "budget"@en ;
+    rdfs:comment "Annual financial budget of an academic department."@en ;
+    rdfs:domain unigraph:Department ;
+    rdfs:range xsd:decimal .
+
+unigraph:capacity a rdf:Property ;
+    rdfs:label "capacity"@en ;
+    rdfs:comment "Maximum seating or enrollment capacity."@en ;
+    rdfs:domain rdfs:Resource ;
+    rdfs:range xsd:integer .
+
+unigraph:code a rdf:Property ;
+    rdfs:label "code"@en ;
+    rdfs:comment "Official university identifier code (department or course)."@en ;
+    rdfs:domain rdfs:Resource ;
+    rdfs:range xsd:string .
+
+unigraph:courseOfDepartment a rdf:Property ;
+    rdfs:label "courseOfDepartment"@en ;
+    rdfs:comment "The department that administers this course."@en ;
+    rdfs:domain unigraph:Course ;
+    rdfs:range unigraph:Department .
+
+unigraph:credits a rdf:Property ;
+    rdfs:label "credits"@en ;
+    rdfs:comment "Number of academic credit hours for a course."@en ;
+    rdfs:domain unigraph:Course ;
+    rdfs:range xsd:integer .
+
+unigraph:creditsRequired a rdf:Property ;
+    rdfs:label "creditsRequired"@en ;
+    rdfs:comment "Total credits required for a degree program."@en ;
+    rdfs:domain unigraph:Program ;
+    rdfs:range xsd:integer .
+
+unigraph:degreeLevel a rdf:Property ;
+    rdfs:label "degreeLevel"@en ;
+    rdfs:comment "Level of academic degree (e.g. bachelor, master, phd)."@en ;
+    rdfs:domain unigraph:Program ;
+    rdfs:range xsd:string .
+
+unigraph:endDate a rdf:Property ;
+    rdfs:label "endDate"@en ;
+    rdfs:comment "End date of an academic semester."@en ;
+    rdfs:domain unigraph:Semester ;
+    rdfs:range xsd:date .
+
+unigraph:enrolledInProgram a rdf:Property ;
+    rdfs:label "enrolledInProgram"@en ;
+    rdfs:comment "The academic program in which a student is enrolled."@en ;
+    rdfs:domain unigraph:Student ;
+    rdfs:range unigraph:Program .
+
+unigraph:enrolledInSection a rdf:Property ;
+    rdfs:label "enrolledInSection"@en ;
+    rdfs:comment "Shortcut relation stating a student is enrolled in a course section."@en ;
+    rdfs:domain unigraph:Student ;
+    rdfs:range unigraph:CourseSection ;
+    rdfs:subPropertyOf unigraph:involvedInCourse .
+
+unigraph:enrollmentSection a rdf:Property ;
+    rdfs:label "enrollmentSection"@en ;
+    rdfs:comment "The course section linked to an enrollment record."@en ;
+    rdfs:domain unigraph:Enrollment ;
+    rdfs:range unigraph:CourseSection .
+
+unigraph:enrollmentStudent a rdf:Property ;
+    rdfs:label "enrollmentStudent"@en ;
+    rdfs:comment "The student linked to an enrollment record."@en ;
+    rdfs:domain unigraph:Enrollment ;
+    rdfs:range unigraph:Student .
+
+unigraph:gradePoints a rdf:Property ;
+    rdfs:label "gradePoints"@en ;
+    rdfs:comment "Numerical grade points earned in an enrollment."@en ;
+    rdfs:domain unigraph:Enrollment ;
+    rdfs:range xsd:decimal .
+
+unigraph:hasPrerequisite a rdf:Property ;
+    rdfs:label "hasPrerequisite"@en ;
+    rdfs:comment "Prerequisite course required before taking this course."@en ;
+    rdfs:domain unigraph:Course ;
+    rdfs:range unigraph:Course .
+
+unigraph:heldInRoom a rdf:Property ;
+    rdfs:label "heldInRoom"@en ;
+    rdfs:comment "The room where a course section meets."@en ;
+    rdfs:domain unigraph:CourseSection ;
+    rdfs:range unigraph:Room .
+
+unigraph:heldInSemester a rdf:Property ;
+    rdfs:label "heldInSemester"@en ;
+    rdfs:comment "The semester in which this course section takes place."@en ;
+    rdfs:domain unigraph:CourseSection ;
+    rdfs:range unigraph:Semester .
+
+unigraph:inBuilding a rdf:Property ;
+    rdfs:label "inBuilding"@en ;
+    rdfs:comment "The building in which a room is situated."@en ;
+    rdfs:domain unigraph:Room ;
+    rdfs:range unigraph:Building .
+
+unigraph:letterGrade a rdf:Property ;
+    rdfs:label "letterGrade"@en ;
+    rdfs:comment "Letter grade awarded in an enrollment (e.g. A, B+, C)."@en ;
+    rdfs:domain unigraph:Enrollment ;
+    rdfs:range xsd:string .
+
+unigraph:offersCourse a rdf:Property ;
+    rdfs:label "offersCourse"@en ;
+    rdfs:comment "A course offered by a department."@en ;
+    rdfs:domain unigraph:Department ;
+    rdfs:range unigraph:Course .
+
+unigraph:offersProgram a rdf:Property ;
+    rdfs:label "offersProgram"@en ;
+    rdfs:comment "The academic program offered by a department."@en ;
+    rdfs:domain unigraph:Department ;
+    rdfs:range unigraph:Program .
+
+unigraph:rank a rdf:Property ;
+    rdfs:label "rank"@en ;
+    rdfs:comment "Academic faculty rank (e.g. professor, assistant_professor)."@en ;
+    rdfs:domain unigraph:Instructor ;
+    rdfs:range xsd:string .
+
+unigraph:salary a rdf:Property ;
+    rdfs:label "salary"@en ;
+    rdfs:comment "Annual salary of academic staff member."@en ;
+    rdfs:domain unigraph:Instructor ;
+    rdfs:range xsd:decimal .
+
+unigraph:season a rdf:Property ;
+    rdfs:label "season"@en ;
+    rdfs:comment "Semester academic season (spring, summer, fall)."@en ;
+    rdfs:domain unigraph:Semester ;
+    rdfs:range xsd:string .
+
+unigraph:sectionNumber a rdf:Property ;
+    rdfs:label "sectionNumber"@en ;
+    rdfs:comment "Section sequence number of a course offering."@en ;
+    rdfs:domain unigraph:CourseSection ;
+    rdfs:range xsd:integer .
+
+unigraph:sectionOfCourse a rdf:Property ;
+    rdfs:label "sectionOfCourse"@en ;
+    rdfs:comment "The parent course to which this section belongs."@en ;
+    rdfs:domain unigraph:CourseSection ;
+    rdfs:range unigraph:Course .
+
+unigraph:sourceId a rdf:Property ;
+    rdfs:label "sourceId"@en ;
+    rdfs:comment "Traceability identifier preserved from the original CSV dataset."@en ;
+    rdfs:domain rdfs:Resource ;
+    rdfs:range xsd:string .
+
+unigraph:startDate a rdf:Property ;
+    rdfs:label "startDate"@en ;
+    rdfs:comment "Start date of an academic semester."@en ;
+    rdfs:domain unigraph:Semester ;
+    rdfs:range xsd:date .
+
+unigraph:status a rdf:Property ;
+    rdfs:label "status"@en ;
+    rdfs:comment "Academic standing/status of a student (e.g. active, graduated)."@en ;
+    rdfs:domain unigraph:Student ;
+    rdfs:range xsd:string .
+
+unigraph:taughtBy a rdf:Property ;
+    rdfs:label "taughtBy"@en ;
+    rdfs:comment "The instructor assigned to teach this course section."@en ;
+    rdfs:domain unigraph:CourseSection ;
+    rdfs:range unigraph:Instructor .
+
+unigraph:year a rdf:Property ;
+    rdfs:label "year"@en ;
+    rdfs:comment "Academic calendar year."@en ;
+    rdfs:domain unigraph:Semester ;
+    rdfs:range xsd:integer .
+
+unigraph:involvedInCourse a rdf:Property ;
+    rdfs:label "involvedInCourse"@en ;
+    rdfs:comment "Generic involvement of a person in a course or section."@en ;
+    rdfs:domain unigraph:Person ;
+    rdfs:range rdfs:Resource .
+
+unigraph:supervises a rdf:Property ;
+    rdfs:label "supervises"@en ;
+    rdfs:comment "Supervisory relationship between an academic staff member and a student."@en ;
+    rdfs:domain unigraph:Instructor ;
+    rdfs:range unigraph:Student ;
+    rdfs:subPropertyOf unigraph:associatedWith .
+
+unigraph:associatedWith a rdf:Property ;
+    rdfs:label "associatedWith"@en ;
+    rdfs:comment "Generic association between a university person and a resource."@en ;
+    rdfs:domain unigraph:Person ;
+    rdfs:range rdfs:Resource .
+

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniGraph — University Knowledge Graph &amp; RDFS Reasoner</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-navy shadow-sm sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2 fw-bold text-white" href="/">
+                <i class="fa-solid fa-diagram-project text-accent"></i>
+                <span>UniGraph</span>
+                <span class="badge bg-accent text-dark ms-2 fs-8 font-monospace">RDF / RDFS / SPARQL</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 active px-3" data-section="overview">
+                            <i class="fa-solid fa-gauge me-1"></i> Tableau de bord
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 px-3" data-section="ontology">
+                            <i class="fa-solid fa-sitemap me-1"></i> Ontologie
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 px-3" data-section="data">
+                            <i class="fa-solid fa-database me-1"></i> Entités
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 px-3" data-section="sparql">
+                            <i class="fa-solid fa-terminal me-1"></i> Console SPARQL
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 px-3" data-section="inference">
+                            <i class="fa-solid fa-brain me-1"></i> Inférence RDFS
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-link text-white-50 px-3" data-section="api-docs">
+                            <i class="fa-solid fa-code me-1"></i> API REST
+                        </button>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center ms-3">
+                    <span id="api-status-badge" class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                        <i class="fa-solid fa-circle-check me-1"></i> En ligne
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container-fluid px-4 py-4">
+
+        <!-- ================================================================= -->
+        <!-- SECTION 1: OVERVIEW -->
+        <!-- ================================================================= -->
+        <section id="section-overview" class="content-section">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">UniGraph — Graphe de Connaissances Universitaire</h2>
+                    <p class="text-muted mb-0">Conversion de données relationnelles CSV en RDF/RDFS, Inférence Déductive W3C et API REST Flask.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/api/export/raw" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-download me-1"></i> unigraph.ttl (Brut)
+                    </a>
+                    <a href="/api/export/inferred" target="_blank" class="btn btn-primary btn-sm bg-navy border-navy">
+                        <i class="fa-solid fa-download me-1"></i> unigraph_inferred.ttl
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Metric Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card shadow-sm border-0 border-start border-primary border-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted fs-7 text-uppercase fw-semibold">Triplets Bruts</span>
+                                    <h3 class="fw-bold my-1 text-primary" id="stat-raw-triples">-</h3>
+                                    <span class="text-muted fs-8">Issus des fichiers CSV</span>
+                                </div>
+                                <div class="stat-icon bg-primary-subtle text-primary">
+                                    <i class="fa-solid fa-cubes"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card shadow-sm border-0 border-start border-success border-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted fs-7 text-uppercase fw-semibold">Triplets Inféres</span>
+                                    <h3 class="fw-bold my-1 text-success" id="stat-inf-triples">-</h3>
+                                    <span class="text-success fs-8 fw-semibold" id="stat-inf-delta">+0 par clôture RDFS</span>
+                                </div>
+                                <div class="stat-icon bg-success-subtle text-success">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card shadow-sm border-0 border-start border-warning border-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted fs-7 text-uppercase fw-semibold">Étudiants &amp; Enseignants</span>
+                                    <h3 class="fw-bold my-1 text-warning" id="stat-people">-</h3>
+                                    <span class="text-muted fs-8">Avec réutilisation FOAF</span>
+                                </div>
+                                <div class="stat-icon bg-warning-subtle text-warning">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card shadow-sm border-0 border-start border-info border-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted fs-7 text-uppercase fw-semibold">Cours &amp; Inscriptions</span>
+                                    <h3 class="fw-bold my-1 text-info" id="stat-courses">-</h3>
+                                    <span class="text-muted fs-8" id="stat-enrollments">- inscriptions</span>
+                                </div>
+                                <div class="stat-icon bg-info-subtle text-info">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Grid -->
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-circle-nodes text-primary me-2"></i>Aperçu du Schéma Ontologique</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="switchSection('ontology')">
+                                Vue Complète <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                        <div class="card-body text-center p-2">
+                            <img src="/api/export/diagram" alt="UniGraph Ontology Diagram" class="img-fluid rounded border shadow-xs" style="max-height: 480px; width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-shield-halved text-success me-2"></i>Points Forts du Projet</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush fs-7">
+                                <li class="list-group-item px-0 py-2 d-flex gap-2">
+                                    <i class="fa-solid fa-check text-success mt-1"></i>
+                                    <div>
+                                        <strong>Intégrité Relationnelle :</strong>
+                                        <div class="text-muted">Conversion fidèle de 30 tables CSV avec traçabilité <code>unigraph:sourceId</code>.</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item px-0 py-2 d-flex gap-2">
+                                    <i class="fa-solid fa-check text-success mt-1"></i>
+                                    <div>
+                                        <strong>Standard W3C FOAF :</strong>
+                                        <div class="text-muted">Réutilisation de <code>foaf:Person</code> et <code>foaf:Organization</code> via <code>rdfs:subClassOf</code>.</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item px-0 py-2 d-flex gap-2">
+                                    <i class="fa-solid fa-check text-success mt-1"></i>
+                                    <div>
+                                        <strong>Inférence RDFS Prouvée :</strong>
+                                        <div class="text-muted">Règles <code>rdfs7</code> (héritage de sous-propriétés) et <code>rdfs9</code> (propagation de sous-classes).</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item px-0 py-2 d-flex gap-2">
+                                    <i class="fa-solid fa-check text-success mt-1"></i>
+                                    <div>
+                                        <strong>API REST Robuste :</strong>
+                                        <div class="text-muted">10+ endpoints JSON conformes, gestion des statuts HTTP et support CORS.</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="mt-3 p-3 bg-light rounded border text-muted fs-8">
+                                <i class="fa-solid fa-info-circle text-primary me-1"></i>
+                                Les requêtes SPARQL pré-enregistrées et le moteur de raisonnement sont directement exécutables via les onglets dédiés.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 2: ONTOLOGY -->
+        <!-- ================================================================= -->
+        <section id="section-ontology" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">Modèle Ontologique RDF / RDFS</h2>
+                    <p class="text-muted mb-0">Hiérarchie des classes, relations de sous-propriétés, typage des domaines et des étendues (domains &amp; ranges).</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/api/export/ontology" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-file-code me-1"></i> unigraph_ontology.ttl
+                    </a>
+                </div>
+            </div>
+
+            <!-- Full Diagram Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-image text-primary me-2"></i>Schéma Conceptuel Graphique</h5>
+                </div>
+                <div class="card-body text-center p-3">
+                    <img src="/api/export/diagram" alt="UniGraph Ontology Diagram" class="img-fluid rounded border" style="max-height: 650px;">
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Classes Table -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-cubes text-success me-2"></i>Classes Ontologiques</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 fs-7">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Classe</th>
+                                            <th>Hiérarchie (rdfs:subClassOf)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ontology-classes-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties Table -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-link text-warning me-2"></i>Propriétés &amp; Axiomes RDFS</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 fs-7">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Propriété</th>
+                                            <th>Domaine</th>
+                                            <th>Étendue</th>
+                                            <th>Sous-propriété de</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ontology-properties-tbody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 3: DATA EXPLORER -->
+        <!-- ================================================================= -->
+        <section id="section-data" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">Explorateur d'Entités Universitaires</h2>
+                    <p class="text-muted mb-0">Consultation des données RDF converties depuis le jeu de données relationnel.</p>
+                </div>
+            </div>
+
+            <ul class="nav nav-pills mb-3 gap-2" id="dataTab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-students" onclick="loadStudents()">
+                        <i class="fa-solid fa-graduation-cap me-1"></i> Étudiants
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-instructors" onclick="loadInstructors()">
+                        <i class="fa-solid fa-chalkboard-user me-1"></i> Enseignants
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-courses" onclick="loadCourses()">
+                        <i class="fa-solid fa-book me-1"></i> Cours
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-sections" onclick="loadSections()">
+                        <i class="fa-solid fa-calendar-days me-1"></i> Sections
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-enrollments" onclick="loadEnrollments()">
+                        <i class="fa-solid fa-id-card-clip me-1"></i> Inscriptions &amp; Notes
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Students Tab -->
+                <div class="tab-pane fade show active" id="tab-students">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0 fs-7" id="students-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Nom Complet</th>
+                                            <th>Email</th>
+                                            <th>Programme</th>
+                                            <th>Diplôme</th>
+                                            <th>Conseiller (Advisor)</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="6" class="text-center py-4 text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructors Tab -->
+                <div class="tab-pane fade" id="tab-instructors">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0 fs-7" id="instructors-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Email</th>
+                                            <th>Rang Académique</th>
+                                            <th>Département</th>
+                                            <th>Salaire</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="5" class="text-center py-4 text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Tab -->
+                <div class="tab-pane fade" id="tab-courses">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0 fs-7" id="courses-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Titre du Cours</th>
+                                            <th>Crédits</th>
+                                            <th>Département</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="4" class="text-center py-4 text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sections Tab -->
+                <div class="tab-pane fade" id="tab-sections">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0 fs-7" id="sections-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Code Cours</th>
+                                            <th>Titre</th>
+                                            <th>Section N°</th>
+                                            <th>Enseignant</th>
+                                            <th>Semestre</th>
+                                            <th>Salle</th>
+                                            <th>Capacité</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="7" class="text-center py-4 text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enrollments Tab -->
+                <div class="tab-pane fade" id="tab-enrollments">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover align-middle mb-0 fs-7" id="enrollments-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Étudiant</th>
+                                            <th>Code Cours</th>
+                                            <th>Titre du Cours</th>
+                                            <th>Section N°</th>
+                                            <th>Note Lettre</th>
+                                            <th>Points (GPA)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="6" class="text-center py-4 text-muted">Chargement...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 4: SPARQL CONSOLE -->
+        <!-- ================================================================= -->
+        <section id="section-sparql" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">Console Interactive SPARQL</h2>
+                    <p class="text-muted mb-0">Exécution de requêtes SPARQL 1.1 sur le graphe brut ou le graphe avec clôture déductive RDFS.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="card shadow-sm border-0 mb-3">
+                        <div class="card-header bg-white py-3">
+                            <h6 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-list-check text-primary me-2"></i>Requêtes Pré-enregistrées</h6>
+                        </div>
+                        <div class="card-body">
+                            <label class="form-label fs-7 fw-semibold">Sélectionner une requête type :</label>
+                            <select class="form-select form-select-sm mb-3" id="saved-queries-select" onchange="onSelectSavedQuery()">
+                                <option value="">-- Choisir une requête pré-définie --</option>
+                            </select>
+                            <p class="text-muted fs-8 mb-2" id="selected-query-description"></p>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-code text-secondary me-2"></i>Éditeur de Requête SPARQL</h6>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="sparql-editor" class="form-control font-monospace fs-8" rows="12" spellcheck="false"></textarea>
+                            
+                            <div class="form-check form-switch my-3">
+                                <input class="form-check-input" type="checkbox" id="sparql-use-inferred">
+                                <label class="form-check-label fs-7 fw-semibold" for="sparql-use-inferred">
+                                    Exécuter sur le graphe inféré (avec déductions RDFS)
+                                </label>
+                            </div>
+
+                            <button class="btn btn-primary bg-navy border-navy w-100" onclick="executeSparql()">
+                                <i class="fa-solid fa-play me-1"></i> Exécuter la Requête
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-navy"><i class="fa-solid fa-table text-success me-2"></i>Résultats de la Requête</h6>
+                            <div id="query-meta-badges">
+                                <span class="badge bg-secondary" id="badge-query-count">0 résultat</span>
+                                <span class="badge bg-light text-dark border ms-1" id="badge-query-time">0.00s</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive" style="max-height: 520px; overflow-y: auto;">
+                                <table class="table table-sm table-striped table-hover mb-0 fs-8" id="sparql-results-table">
+                                    <thead class="table-light sticky-top">
+                                        <tr><th class="text-muted text-center py-4">Exécutez une requête pour afficher les résultats</th></tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 5: RDFS INFERENCE LABORATORY -->
+        <!-- ================================================================= -->
+        <section id="section-inference" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">Démonstration du Raisonnement Sémantique RDFS</h2>
+                    <p class="text-muted mb-0">Validation expérimentale rigoureuse Avant / Après inférence selon les règles formelles du W3C.</p>
+                </div>
+                <button class="btn btn-primary bg-navy border-navy btn-sm" onclick="loadInferenceDemos()">
+                    <i class="fa-solid fa-rotate me-1"></i> Rafraîchir les Démonstrations
+                </button>
+            </div>
+
+            <div class="row g-4" id="inference-cards-container">
+                <!-- Dynamically rendered demonstration cards -->
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 6: REST API DOCUMENTATION -->
+        <!-- ================================================================= -->
+        <section id="section-api-docs" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <div>
+                    <h2 class="fw-bold mb-1 text-navy">Documentation des Points d'Accès API REST</h2>
+                    <p class="text-muted mb-0">Tous les points de terminaison retournent du JSON propre avec statuts HTTP et gestion d'erreurs normalisée.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 fs-7">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Méthode</th>
+                                    <th>Route</th>
+                                    <th>Description</th>
+                                    <th>Paramètres</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/status</code></td>
+                                    <td>État de santé du système et métriques globales du graphe.</td>
+                                    <td>Aucun</td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/status')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/ontology</code></td>
+                                    <td>Classes, propriétés, hiérarchies et axiomes RDFS.</td>
+                                    <td>Aucun</td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/ontology')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/students</code></td>
+                                    <td>Liste des étudiants avec programmes et conseillers.</td>
+                                    <td><code>?limit=50&amp;status=...</code></td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/students?limit=5')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/instructors</code></td>
+                                    <td>Liste des enseignants, départements et salaires.</td>
+                                    <td><code>?department=...&amp;rank=...</code></td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/instructors')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/courses</code></td>
+                                    <td>Liste des cours offerts et départements de rattachement.</td>
+                                    <td><code>?limit=50&amp;department=...</code></td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/courses?limit=5')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/sections</code></td>
+                                    <td>Sections de cours, enseignants et semestres.</td>
+                                    <td>Aucun</td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/sections')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/enrollments</code></td>
+                                    <td>Inscriptions des étudiants aux sections et notes obtenues.</td>
+                                    <td><code>?limit=50</code></td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/enrollments?limit=5')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/sparql/queries</code></td>
+                                    <td>Liste des requêtes SPARQL pré-configurées.</td>
+                                    <td>Aucun</td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/sparql/queries')">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-primary">POST</span></td>
+                                    <td><code>/api/sparql/execute</code></td>
+                                    <td>Exécute une requête SPARQL personnalisée ou par ID.</td>
+                                    <td>Body JSON : <code>{"query": "...", "use_inferred": bool}</code></td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testSparqlPost()">Tester</button></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td><code>/api/inference/demo</code></td>
+                                    <td>Démonstrations détaillées du raisonneur avec statistiques avant/après.</td>
+                                    <td>Aucun</td>
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="testApiEndpoint('/api/inference/demo')">Tester</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for API Response Preview -->
+            <div class="modal fade" id="apiModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-navy text-white">
+                            <h6 class="modal-title font-monospace" id="apiModalTitle">API Response</h6>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <pre class="bg-dark text-light p-3 m-0 fs-8" id="apiModalBody" style="max-height: 480px; overflow-y: auto;"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-3 text-center text-muted fs-8">
+        <div class="container">
+            <strong>UniGraph</strong> — Knowledge Graph Academic Project &bull; Python, RDFLib, RDFS Inference, Flask &bull; Respect des règles académiques
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
